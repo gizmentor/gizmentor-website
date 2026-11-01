@@ -38,11 +38,14 @@ Adding a page: update `src/routes.jsx`, `routeSettings` in `src/config/seo.js`, 
 `en.js` and `ar.js`. Any copy change must be made in both languages.
 
 ## Deploy
-- Hosted on Vercel via the GitHub integration (no deploy step in this repo's code).
-- Pull requests get a Vercel Preview deployment; merging to `main` deploys to Production.
-- Build command `npm run build`, output directory `dist`.
-- `DEPLOY.md` is older generic setup notes and partly outdated (it describes an SPA setup and a
-  `gizmentor-app` repo); trust `vercel.json` and `package.json` over it.
+- gizmentor.com is served by nginx on GizMentor's own server, not by Vercel (checked 2026-11-01:
+  the response comes from nginx, and the last Vercel deployment was in April 2026 while `main` has
+  had commits since). There is no deploy step in this repo's code, so the deploy is done by hand;
+  ask Maurice how before shipping a change.
+- `npm run build` writes the site to `dist`.
+- `vercel.json` and `DEPLOY.md` are left from earlier setups (DEPLOY.md also describes an SPA and a
+  `gizmentor-app` repo). Keep `vercel.json` and `public/_redirects` in sync with each other; trust
+  `package.json` for how the site builds.
 
 ## Rules
 - This repo is PUBLIC. Never commit secrets, credentials, `.env` files, or anything internal
