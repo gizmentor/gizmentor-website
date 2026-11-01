@@ -40,8 +40,15 @@ Adding a page: update `src/routes.jsx`, `routeSettings` in `src/config/seo.js`, 
 ## Deploy
 - gizmentor.com is served by nginx on GizMentor's own server, not by Vercel (checked 2026-11-01:
   the response comes from nginx, and the last Vercel deployment was in April 2026 while `main` has
-  had commits since). There is no deploy step in this repo's code, so the deploy is done by hand;
-  ask Maurice how before shipping a change.
+  had commits since). nginx serves `/opt/gizmentor-website/dist` as static files.
+- `.github/workflows/deploy.yml` deploys every merge to `main`: over SSH it fast-forwards the server's
+  checkout, builds in a second checkout next to it (`/opt/gizmentor-website.build`), copies the
+  finished `dist` in with rsync, checks `/` and `/ar/` on the server, and tags the commit
+  `production-live`. Rerun by hand: Actions → Deploy → Run workflow.
+- Setup, in the repo's `production` environment: secrets `DEPLOY_SSH_KEY` (a private key the server
+  accepts), `DEPLOY_KNOWN_HOSTS` (the server's host key line), `DEPLOY_HOST`, `DEPLOY_USER`;
+  optional variable `DEPLOY_PATH` (default `/opt/gizmentor-website`). Until they are set, a merge
+  skips its deploy with a warning.
 - `npm run build` writes the site to `dist`.
 - `vercel.json` and `DEPLOY.md` are left from earlier setups (DEPLOY.md also describes an SPA and a
   `gizmentor-app` repo). Keep `vercel.json` and `public/_redirects` in sync with each other; trust
