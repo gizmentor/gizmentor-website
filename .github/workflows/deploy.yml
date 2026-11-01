@@ -1,0 +1,122 @@
+# Deploys main to gizmentor.com on every merge. The site is static: nginx on GizMentor's
+# server serves $DEPLOY_PATH/dist, so a deploy builds the merged commit in a separate
+# folder next to it and copies the finished files in, and visitors never see a half-built
+# site. Run again by hand: GitHub app → Actions → Deploy → Run workflow. Setup: CLAUDE.md,
+# "Deploy".
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# One deploy at a time; a second waits for the first.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: write # the production-live tag: what gizmentor.com runs
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    steps:
+      - name: Is the site set up?
+        id: setup
+        env:
+          HAS_KEY: ${{ secrets.DEPLOY_SSH_KEY != '' }}
+          HAS_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS != '' }}
+          HAS_HOST: ${{ secrets.DEPLOY_HOST != '' }}
+          HAS_USER: ${{ secrets.DEPLOY_USER != '' }}
+        run: |
+          missing=""
+          [ "$HAS_KEY" = "true" ] || missing="$missing DEPLOY_SSH_KEY"
+          [ "$HAS_HOSTS" = "true" ] || missing="$missing DEPLOY_KNOWN_HOSTS"
+          [ "$HAS_HOST" = "true" ] || missing="$missing DEPLOY_HOST"
+          [ "$HAS_USER" = "true" ] || missing="$missing DEPLOY_USER"
+          if [ -z "$missing" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          elif [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            # Until the secrets are set, a merge skips its deploy instead of failing.
+            echo "::warning::Not deployed: the production environment still needs:$missing (CLAUDE.md, Deploy)."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Set$missing for the production environment (CLAUDE.md, Deploy)."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.setup.outputs.ready == 'true'
+
+      - name: Connect to the server
+        if: steps.setup.outputs.ready == 'true'
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy
+          chmod 600 ~/.ssh/deploy
+          # The server's own key, pinned: a deploy never trusts a host it has not seen.
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Pull, build and publish
+        if: steps.setup.outputs.ready == 'true'
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          SSH_USER: ${{ secrets.DEPLOY_USER }}
+          APP_DIR: ${{ vars.DEPLOY_PATH || '/opt/gizmentor-website' }}
+          SHA: ${{ github.sha }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          ssh -i ~/.ssh/deploy -o BatchMode=yes "$SSH_USER@$HOST" \
+            "APP_DIR='$APP_DIR' SHA='$SHA' OWNER='$OWNER' bash -s" <<'REMOTE'
+          set -euo pipefail
+          cd "$APP_DIR"
+          # The repo moved to the gizmentor org (2026-11-01): point the server's origin at
+          # the current owner instead of leaning on GitHub's redirect from the old one.
+          url=$(git remote get-url origin)
+          new=$(printf '%s' "$url" | sed -E "s#([:/])[^/:]+/([^/]+)\$#\\1$OWNER/\\2#")
+          if [ "$new" != "$url" ]; then git remote set-url origin "$new"; echo "origin now $new"; fi
+          git fetch --quiet origin main
+          git merge --ff-only --quiet "$SHA"
+
+          # The build writes into its own dist, which it empties first, so it runs in a
+          # second checkout of the same repo; nginx keeps serving $APP_DIR/dist meanwhile.
+          BUILD="$APP_DIR.build"
+          [ -d "$BUILD" ] || git worktree add --quiet --detach "$BUILD" "$SHA"
+          cd "$BUILD"
+          git checkout --quiet --force --detach "$SHA"
+          git clean -fdxq
+          npm ci --no-audit --no-fund
+          npm run build
+          test -s dist/index.html
+          rsync -a --delete-delay dist/ "$APP_DIR/dist/"
+          echo "Deployed $(git log -1 --format='%h %s')"
+          REMOTE
+
+      # Asked on the server itself, so nothing in front of it (CDN, firewall) can answer
+      # for it.
+      - name: Check it is up
+        if: steps.setup.outputs.ready == 'true'
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          SSH_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          ssh -i ~/.ssh/deploy -o BatchMode=yes "$SSH_USER@$HOST" bash -s <<'REMOTE'
+          set -euo pipefail
+          for path in / /ar/; do
+            curl -fsS --max-time 10 --resolve gizmentor.com:443:127.0.0.1 \
+              "https://gizmentor.com$path" -o /dev/null
+            echo "https://gizmentor.com$path is up"
+          done
+          REMOTE
+
+      - name: Mark what gizmentor.com runs
+        if: steps.setup.outputs.ready == 'true'
+        run: |
+          git tag -f production-live "$GITHUB_SHA"
+          git push -f origin refs/tags/production-live
