@@ -59,4 +59,15 @@ Adding a page: update `src/routes.jsx`, `routeSettings` in `src/config/seo.js`, 
   (private numbers, internal strategy, unreleased plans, customer data).
 - `src/config/site.js` holds only verified, publishable facts; leave unknown values as `null`.
 - Do not push to `main`. Work on a branch prefixed `claude/` and open a PR into `main`.
-- Do not merge PRs; leave that to a human.
+
+## Pull requests and merging (policy since 2026-10-15; deploy on merge since 2026-11-01)
+- Once `npm run lint` and `npm run build` pass, commit, push and open the PR without asking.
+- A PR whose checks are green may be merged without asking (`gh pr merge <n> --merge`), except
+  one that changes production settings, touches keys or credentials, deletes content or
+  features, or changes the build or deploy setup. Ask the owner first for those.
+- **Merging deploys to gizmentor.com** (see Deploy). Ask before merging any change visitors will
+  see (copy, layout, images, routes, redirects). Docs-only changes can be merged under the rule above.
+- Never merge on pending or failing checks, and never use `gh pr merge --auto`: without
+  auto-merge enabled on the repo it merges at once, before checks finish.
+- As of 2026-11-02 the repo has no CI workflow (only `deploy.yml`), so "green" means `npm run lint`
+  and `npm run build` passed on the PR's head commit.
