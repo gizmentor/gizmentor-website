@@ -250,6 +250,7 @@ const en = {
       eyebrow: 'Easelect · A GizMentor venture',
       title: 'Easelect.',
       tagline: 'AI. Built for shopping.',
+      subline: 'Skip the Research. Find the Best. Pay Less.',
       lead: 'An AI shopping research and product discovery platform designed around customer intent. Shoppers describe what they need, explore a focused shortlist, see why each product fits and compare retailer offers.',
       primary: 'Visit Easelect',
       secondary: 'Partner with Easelect',

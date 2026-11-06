@@ -385,6 +385,7 @@ strong, b { font-weight: 600; }
 .page-hero-copy { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 96px); margin-top: clamp(40px, 5vw, 72px); align-items: start; }
 .hero-title { font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.75rem); line-height: 1.02; letter-spacing: -0.04em; font-weight: 500; text-wrap: balance; }
 .page-hero .hero-lead { color: var(--text-2); }
+.hero-subline { display: block; margin-bottom: 0.6em; color: var(--text); font-weight: 600; }
 .page-hero .btn-row { margin-top: 32px; }
 .page-hero .hero-next { bottom: auto; top: 180px; }
 .page-hero .hero-label { margin-inline-end: 96px; }
