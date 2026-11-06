@@ -31,7 +31,7 @@ export default function Easelect() {
         word="Easelect"
         eyebrow={e.hero.eyebrow}
         title={<><span className="sr-only">{e.hero.title} </span>{e.hero.tagline}</>}
-        lead={e.hero.lead}
+        lead={<><strong className="hero-subline">{e.hero.subline}</strong>{e.hero.lead}</>}
         next="challenge"
         actions={
           <>
