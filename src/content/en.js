@@ -249,7 +249,7 @@ const en = {
     hero: {
       eyebrow: 'Easelect · A GizMentor venture',
       title: 'Easelect.',
-      tagline: 'AI. Built for shopping.',
+      tagline: 'AI. Built for Shopping.',
       subline: 'Skip the Research. Find the Best. Pay Less.',
       lead: 'An AI shopping research and product discovery platform designed around customer intent. Shoppers describe what they need, explore a focused shortlist, see why each product fits and compare retailer offers.',
       primary: 'Visit Easelect',
@@ -579,7 +579,7 @@ const en = {
       description: 'GizMentor builds a portfolio of technology ventures: Easelect, an AI shopping research platform, and MagFusion, a consumer technology product line.',
     },
     '/easelect': {
-      title: 'Easelect — AI. Built for shopping. | A GizMentor venture',
+      title: 'Easelect — AI. Built for Shopping. | A GizMentor venture',
       description: 'Easelect is an AI shopping research and product discovery platform that understands what shoppers need, explains its recommendations and compares retailer offers. Operated by GizMentor FZCO.',
     },
     '/products/magfusion': {
