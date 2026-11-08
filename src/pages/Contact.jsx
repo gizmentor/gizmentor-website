@@ -1,8 +1,8 @@
 import { useState, useSyncExternalStore } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Mail, MapPin } from 'lucide-react';
+import { Handshake, Mail, MapPin } from 'lucide-react';
 import { useLocale } from '../i18n/useLocale';
-import { company, inquiryTypes } from '../config/site';
+import { company, emailFor, inquiryTypes } from '../config/site';
 import PageHero from '../components/ui/PageHero';
 
 const validTypes = new Set(inquiryTypes);
@@ -26,7 +26,7 @@ export default function Contact() {
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   // Delivery is unchanged from the previous site: opens the visitor's email client
-  // addressed to company.email. Swap this for a form endpoint (e.g. an n8n webhook) when ready.
+  // addressed to company.email, or company.partnersEmail for partner enquiries. Swap this for a form endpoint (e.g. an n8n webhook) when ready.
   const onSubmit = (e) => {
     e.preventDefault();
     const typeLabel = c.types[inquiryType];
@@ -36,7 +36,7 @@ export default function Contact() {
       `${l.name}: ${form.name}\n${l.email}: ${form.email}\n${l.organisation}: ${form.organisation || '—'}\n` +
         `${l.type}: ${typeLabel}\n${product ? `${l.product}: ${product}\n` : ''}\n${l.message}:\n${form.message}`,
     );
-    window.location.href = `mailto:${company.email}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${emailFor(inquiryType)}?subject=${subject}&body=${body}`;
     setSent(true);
   };
 
@@ -49,6 +49,10 @@ export default function Contact() {
             <li>
               <span className="icon-tile" aria-hidden="true"><Mail size={18} strokeWidth={1.6} /></span>
               <span><span className="contact-label">{c.emailLabel}</span><a href={`mailto:${company.email}`} className="latin">{company.email}</a></span>
+            </li>
+            <li>
+              <span className="icon-tile" aria-hidden="true"><Handshake size={18} strokeWidth={1.6} /></span>
+              <span><span className="contact-label">{c.partnersLabel}</span><a href={`mailto:${company.partnersEmail}`} className="latin">{company.partnersEmail}</a></span>
             </li>
             <li>
               <span className="icon-tile" aria-hidden="true"><MapPin size={18} strokeWidth={1.6} /></span>
@@ -87,7 +91,7 @@ export default function Contact() {
               <textarea id="message" name="message" rows="6" value={form.message} onChange={onChange} required className="form-control" />
             </div>
             <button type="submit" className="btn btn-primary btn-block">{c.submit}</button>
-            <p className="form-note" role="status">{sent ? c.noteAfter(company.email) : c.noteBefore}</p>
+            <p className="form-note" role="status">{sent ? c.noteAfter(emailFor(inquiryType)) : c.noteBefore}</p>
           </form>
         </div>
       </section>

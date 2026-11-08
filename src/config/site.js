@@ -15,6 +15,8 @@ export const company = {
   founded: null, // e.g. '2024' — hidden until confirmed
   countryCode: 'AE',
   email: 'info@gizmentor.com',
+  // Partner, merchant and affiliate applications (Maurice, 2026-11-08).
+  partnersEmail: 'partners@easelect.ai',
   // Registration numbers are optional; leave null to show statements only.
   tradeLicenceNumber: null,
   trademarkRegistrationNumber: null,
@@ -62,3 +64,9 @@ export const nav = [
 
 /** Contact form enquiry types. Labels live in content.contact.types under the same value. */
 export const inquiryTypes = ['investor', 'partnership', 'retail', 'easelect', 'magfusion', 'support', 'press', 'general'];
+
+/** Enquiry types addressed to company.partnersEmail; every other type goes to company.email. */
+export const partnerInquiryTypes = ['partnership', 'retail'];
+
+export const emailFor = (inquiryType) =>
+  partnerInquiryTypes.includes(inquiryType) ? company.partnersEmail : company.email;
