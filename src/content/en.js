@@ -521,6 +521,7 @@ const en = {
     title: 'Talk to GizMentor.',
     lead: 'Investors, partners, merchants and customers: tell us what you have in mind and the right person will respond.',
     emailLabel: 'Email',
+    partnersLabel: 'Partners, merchants and affiliates',
     addressLabel: 'Address',
     fields: {
       name: 'Name',
