@@ -314,7 +314,7 @@ const en = {
       eyebrow: 'Platform',
       title: 'Built for web and mobile.',
       web: { title: 'Web platform', body: 'Available now at easelect.ai. Research any product from the browser.', imageAlt: 'The Easelect web platform home page with a search box and suggested searches' },
-      mobile: { title: 'Mobile app', body: 'A native app bringing Easelect research into the moment of purchase, wherever it happens.', imageAlt: 'Hands holding a phone showing the Easelect app home screen' },
+      mobile: { title: 'Mobile app', body: 'A native app bringing Easelect research into the moment of purchase, wherever it happens.', imageAlt: 'A phone showing the Easelect app home screen: AI. Built for Shopping.' },
     },
     categories: {
       eyebrow: 'Categories and markets',

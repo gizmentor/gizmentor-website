@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { Box, BrainCircuit, FileCheck, Fingerprint, Globe, Landmark, Network, Package, PenTool, ShoppingBag, Smartphone, Stamp } from 'lucide-react';
+import CardIcon from '../components/ui/CardIcon';
 import PageHero from '../components/ui/PageHero';
 import Section from '../components/ui/Section';
 import MetricGrid from '../components/ui/MetricGrid';
@@ -9,6 +11,11 @@ import { useLocale } from '../i18n/useLocale';
 import { company, ventures, investorMetrics } from '../config/site';
 import magfusionImg from '../assets/magfusion/magfusion-hero.webp';
 import facadeImg from '../assets/images/investors-facade.webp';
+
+// One icon per capability card, in the order of content.investors.capability.items.
+const capabilityIcons = [PenTool, BrainCircuit, Package];
+// One icon per growth card, in the order of content.investors.growth.items.
+const growthIcons = [Smartphone, Fingerprint, ShoppingBag, Box, Globe, Network];
 
 const sections = ['overview', 'vision', 'problem', 'strategy', 'easelect', 'capability', 'execution', 'foundation', 'growth', 'contact'];
 const num = (id) => String(sections.indexOf(id) + 1).padStart(2, '0');
@@ -84,7 +91,11 @@ export default function Investors() {
       <Section id="capability" tone="muted" eyebrow={eyebrow('capability')} title={v.capability.title}>
         <ul className="card-grid card-grid-3">
           {v.capability.items.map((c, i) => (
-            <li key={c.title} className={`card reveal reveal-delay-${i + 1}`}><h3>{c.title}</h3><p>{c.body}</p></li>
+            <li key={c.title} className={`card reveal reveal-delay-${i + 1}`}>
+              <CardIcon icon={capabilityIcons[i]} />
+              <h3>{c.title}</h3>
+              <p>{c.body}</p>
+            </li>
           ))}
         </ul>
       </Section>
@@ -104,17 +115,20 @@ export default function Investors() {
       <Section id="foundation" tone="dark" eyebrow={eyebrow('foundation')} title={v.foundation.title}>
         <ul className="card-grid card-grid-3">
           <li className="card reveal">
+            <CardIcon icon={Landmark} />
             <h3>{v.foundation.licence.title}</h3>
             <p>{v.foundation.licence.body}</p>
             <ul className="mini-list">{t.common.licensedActivities.map((a) => <li key={a}>{a}</li>)}</ul>
             {company.tradeLicenceNumber && <p className="fine">{v.foundation.licence.number} <span className="latin">{company.tradeLicenceNumber}</span></p>}
           </li>
           <li className="card reveal reveal-delay-1">
+            <CardIcon icon={Stamp} />
             <h3>{v.foundation.trademark.title}</h3>
             <p>{t.common.trademark}</p>
             {company.trademarkRegistrationNumber && <p className="fine">{v.foundation.trademark.number} <span className="latin">{company.trademarkRegistrationNumber}</span></p>}
           </li>
           <li className="card reveal reveal-delay-2">
+            <CardIcon icon={FileCheck} />
             <h3>{v.foundation.product.title}</h3>
             <p>{t.common.tdra}</p>
             {magfusion.tdraRegistrationNumber && <p className="fine">{v.foundation.product.number} <span className="latin">{magfusion.tdraRegistrationNumber}</span></p>}
@@ -126,7 +140,7 @@ export default function Investors() {
       <Section id="growth" eyebrow={eyebrow('growth')} title={v.growth.title} lead={v.growth.note}>
         <ul className="card-grid card-grid-3">
           {v.growth.items.map((g, i) => (
-            <li key={g.title} className={`card reveal reveal-delay-${(i % 3) + 1}`}><h3>{g.title}</h3><p>{g.body}</p></li>
+            <li key={g.title} className={`card reveal reveal-delay-${(i % 3) + 1}`}><CardIcon icon={growthIcons[i]} /><h3>{g.title}</h3><p>{g.body}</p></li>
           ))}
         </ul>
       </Section>

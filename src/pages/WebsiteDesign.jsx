@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react';
+import { ChartLine, Check, Gauge, Languages, ShieldCheck, Smartphone, Sparkles } from 'lucide-react';
 import PageHero from '../components/ui/PageHero';
 import Section from '../components/ui/Section';
 import PillarGrid from '../components/ui/PillarGrid';
@@ -7,6 +7,7 @@ import Button from '../components/ui/Button';
 import ThemedImage from '../components/ui/ThemedImage';
 import CircleIcon from '../components/ui/CircleIcon';
 import Price from '../components/services/Price';
+import CardIcon from '../components/ui/CardIcon';
 import { useLocale } from '../i18n/useLocale';
 import { carePlan, designPackages, designServices, portfolio } from '../config/site';
 import gizLight from '../assets/services/gizmentor-web-light.webp';
@@ -18,6 +19,9 @@ const shots = {
   gizmentor: { light: gizLight, dark: gizDark },
   easelect: { light: easelectLight, dark: easelectDark },
 };
+
+// One icon per "In every build" card, in the order of content.websiteDesign.included.items.
+const includedIcons = [Smartphone, Gauge, Languages, ChartLine, ShieldCheck, Sparkles];
 
 const brief = (pkg) => `${designServices.briefPath}?package=${pkg}`;
 
@@ -85,7 +89,11 @@ export default function WebsiteDesign() {
       <Section eyebrow={w.included.eyebrow} title={w.included.title}>
         <ul className="card-grid card-grid-3">
           {w.included.items.map((c, i) => (
-            <li key={c.title} className={`card reveal reveal-delay-${(i % 3) + 1}`}><h3>{c.title}</h3><p>{c.body}</p></li>
+            <li key={c.title} className={`card reveal reveal-delay-${(i % 3) + 1}`}>
+              <CardIcon icon={includedIcons[i]} />
+              <h3>{c.title}</h3>
+              <p>{c.body}</p>
+            </li>
           ))}
         </ul>
       </Section>
