@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { BrainCircuit, Package, PenTool } from 'lucide-react';
 import PageHero from '../components/ui/PageHero';
 import Section from '../components/ui/Section';
 import MetricGrid from '../components/ui/MetricGrid';
@@ -9,6 +10,9 @@ import { useLocale } from '../i18n/useLocale';
 import { company, ventures, investorMetrics } from '../config/site';
 import magfusionImg from '../assets/magfusion/magfusion-hero.webp';
 import facadeImg from '../assets/images/investors-facade.webp';
+
+// One icon per capability card, in the order of content.investors.capability.items.
+const capabilityIcons = [PenTool, BrainCircuit, Package];
 
 const sections = ['overview', 'vision', 'problem', 'strategy', 'easelect', 'capability', 'execution', 'foundation', 'growth', 'contact'];
 const num = (id) => String(sections.indexOf(id) + 1).padStart(2, '0');
@@ -83,9 +87,16 @@ export default function Investors() {
 
       <Section id="capability" tone="muted" eyebrow={eyebrow('capability')} title={v.capability.title}>
         <ul className="card-grid card-grid-3">
-          {v.capability.items.map((c, i) => (
-            <li key={c.title} className={`card reveal reveal-delay-${i + 1}`}><h3>{c.title}</h3><p>{c.body}</p></li>
-          ))}
+          {v.capability.items.map((c, i) => {
+            const Icon = capabilityIcons[i];
+            return (
+              <li key={c.title} className={`card reveal reveal-delay-${i + 1}`}>
+                {Icon && <span className="icon-tile card-icon" aria-hidden="true"><Icon size={20} strokeWidth={1.6} /></span>}
+                <h3>{c.title}</h3>
+                <p>{c.body}</p>
+              </li>
+            );
+          })}
         </ul>
       </Section>
 

@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react';
+import { ChartLine, Check, Gauge, Languages, ShieldCheck, Smartphone, Sparkles } from 'lucide-react';
 import PageHero from '../components/ui/PageHero';
 import Section from '../components/ui/Section';
 import PillarGrid from '../components/ui/PillarGrid';
@@ -18,6 +18,9 @@ const shots = {
   gizmentor: { light: gizLight, dark: gizDark },
   easelect: { light: easelectLight, dark: easelectDark },
 };
+
+// One icon per "In every build" card, in the order of content.websiteDesign.included.items.
+const includedIcons = [Smartphone, Gauge, Languages, ChartLine, ShieldCheck, Sparkles];
 
 const brief = (pkg) => `${designServices.briefPath}?package=${pkg}`;
 
@@ -84,9 +87,16 @@ export default function WebsiteDesign() {
 
       <Section eyebrow={w.included.eyebrow} title={w.included.title}>
         <ul className="card-grid card-grid-3">
-          {w.included.items.map((c, i) => (
-            <li key={c.title} className={`card reveal reveal-delay-${(i % 3) + 1}`}><h3>{c.title}</h3><p>{c.body}</p></li>
-          ))}
+          {w.included.items.map((c, i) => {
+            const Icon = includedIcons[i];
+            return (
+              <li key={c.title} className={`card reveal reveal-delay-${(i % 3) + 1}`}>
+                {Icon && <span className="icon-tile card-icon" aria-hidden="true"><Icon size={20} strokeWidth={1.6} /></span>}
+                <h3>{c.title}</h3>
+                <p>{c.body}</p>
+              </li>
+            );
+          })}
         </ul>
       </Section>
 
