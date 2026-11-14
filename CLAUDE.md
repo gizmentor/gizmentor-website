@@ -35,7 +35,9 @@ Stack: Vite, React 19, react-router-dom 6, prerendered to static HTML at build t
 - `src/i18n/` - locale mapping and `useLocale()` (`t` for copy, `to()` to localise links)
 - `src/styles/index.css` - design tokens (`:root` and `:root[data-theme='dark']`)
 - `scripts/prerender.mjs` - static prerender step
-- `vercel.json` - clean URLs, redirects, cache and security headers
+- `vercel.json` - clean URLs, redirects, cache and security headers (Vercel only)
+- `deploy/nginx/` - the same cache and security headers for the nginx server; install once with
+  `sudo bash /opt/gizmentor-website/deploy/nginx/install.sh` (backs up, tests, rolls back on failure)
 - `public/_redirects` - Netlify-style fallback of the same redirects; keep in sync with `vercel.json`
 
 Adding a page: update `src/routes.jsx`, `routeSettings` in `src/config/seo.js`, and the page meta in both
