@@ -191,37 +191,25 @@ export default function Brief() {
       <ChoiceGroup name="projectType" label={f.projectType.label} options={f.projectType.options} values={OPTIONS.projectType} value={data.projectType} onChange={onRadio} required />
     </>,
     <>
-      <Field name="goals" label={f.goals.label} hint={f.goals.hint} multiline required maxLength={3000} value={data.goals} onChange={onText} />
-      <Field name="audience" label={f.audience.label} hint={f.audience.hint} optional={b.optional} multiline maxLength={2000} value={data.audience} onChange={onText} />
-      <Field name="currentSite" label={f.currentSite.label} hint={f.currentSite.hint} optional={b.optional} dir="ltr" inputMode="url" autoCapitalize="off" spellCheck={false} maxLength={300} value={data.currentSite} onChange={onText} />
-    </>,
-    <>
-      <ChoiceGroup name="pages" label={f.pages.label} options={f.pages.options} values={OPTIONS.pages} value={data.pages} onChange={onRadio} required columns={3} />
-      <ChoiceGroup type="checkbox" name="features" label={f.features.label} options={f.features.options} values={OPTIONS.features} value={features} onChange={onFeature} />
-      <Field name="featureNotes" label={f.featureNotes.label} optional={b.optional} multiline maxLength={2000} value={data.featureNotes} onChange={onText} />
-    </>,
-    <>
+      <Field name="goals" label={f.goals.label} hint={f.goals.hint} multiline rows={3} required maxLength={3000} value={data.goals} onChange={onText} />
       <ChoiceGroup name="budget" label={f.budget.label} hint={f.budget.hint} options={f.budget.options} values={OPTIONS.budget} value={budget} onChange={onRadio} required />
-      <p className="policy-note">{b.policyNote}</p>
-    </>,
-    <>
       <ChoiceGroup name="timeline" label={f.timeline.label} options={f.timeline.options} values={OPTIONS.timeline} value={data.timeline} onChange={onRadio} required />
-      <Field name="deadline" label={f.deadline.label} hint={f.deadline.hint} optional={b.optional} maxLength={200} value={data.deadline} onChange={onText} />
-    </>,
-    <>
-      <Field name="references" label={f.references.label} hint={f.references.hint} optional={b.optional} multiline maxLength={2000} value={data.references} onChange={onText} />
-      <ChoiceGroup name="assets" label={f.assets.label} options={f.assets.options} values={OPTIONS.assets} value={data.assets} onChange={onRadio} required columns={3} />
-      <Field name="assetsLink" label={f.assetsLink.label} hint={f.assetsLink.hint} optional={b.optional} dir="ltr" inputMode="url" autoCapitalize="off" spellCheck={false} maxLength={500} value={data.assetsLink} onChange={onText} />
+      <details className="brief-more">
+        <summary>{b.more}</summary>
+        <div className="brief-fields">
+          <ChoiceGroup name="pages" label={f.pages.label} options={f.pages.options} values={OPTIONS.pages} value={data.pages} onChange={onRadio} columns={3} />
+          <ChoiceGroup type="checkbox" name="features" label={f.features.label} options={f.features.options} values={OPTIONS.features} value={features} onChange={onFeature} />
+          <Field name="references" label={f.references.label} hint={f.references.hint} optional={b.optional} multiline rows={3} maxLength={2000} value={data.references} onChange={onText} />
+        </div>
+      </details>
     </>,
     <>
       <div className="form-row">
         <Field name="name" label={f.name} autoComplete="name" required maxLength={120} value={data.name} onChange={onText} />
         <Field name="email" label={f.email} type="email" dir="ltr" autoComplete="email" required maxLength={254} value={data.email} onChange={onText} />
       </div>
-      <div className="form-row">
-        <Field name="company" label={f.company} optional={b.optional} autoComplete="organization" maxLength={160} value={data.company} onChange={onText} />
-        <Field name="country" label={f.country} optional={b.optional} autoComplete="country-name" maxLength={80} value={data.country} onChange={onText} />
-      </div>
+      <Field name="company" label={f.company} optional={b.optional} autoComplete="organization" maxLength={160} value={data.company} onChange={onText} />
+      <p className="policy-note">{b.policyNote}</p>
       <label className="consent">
         <input type="checkbox" name="agreed" checked={data.agreed} onChange={(e) => set('agreed', e.target.checked)} required />
         <span>{f.agreed}</span>
