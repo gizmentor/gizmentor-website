@@ -3,7 +3,12 @@ import Section from '../components/ui/Section';
 import VentureCards from '../components/ui/VentureCards';
 import PillarGrid from '../components/ui/PillarGrid';
 import CtaBand from '../components/ui/CtaBand';
+import { Coins, Expand, Repeat } from 'lucide-react';
+import CardIcon from '../components/ui/CardIcon';
 import { useLocale } from '../i18n/useLocale';
+
+// One icon per criteria card, in the order of content.ventures.criteria.items.
+const criteriaIcons = [Repeat, Coins, Expand];
 
 export default function Ventures() {
   const { t } = useLocale();
@@ -19,7 +24,7 @@ export default function Ventures() {
       <Section tone="dark" eyebrow={v.criteria.eyebrow} title={v.criteria.title}>
         <ul className="card-grid card-grid-3">
           {v.criteria.items.map((c, i) => (
-            <li key={c.title} className={`card reveal reveal-delay-${i + 1}`}><h3>{c.title}</h3><p>{c.body}</p></li>
+            <li key={c.title} className={`card reveal reveal-delay-${i + 1}`}><CardIcon icon={criteriaIcons[i]} /><h3>{c.title}</h3><p>{c.body}</p></li>
           ))}
         </ul>
       </Section>

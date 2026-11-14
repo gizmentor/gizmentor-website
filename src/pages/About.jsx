@@ -1,10 +1,15 @@
 import PageHero from '../components/ui/PageHero';
+import { AppWindow, BatteryCharging, RadioTower, ShoppingCart } from 'lucide-react';
+import CardIcon from '../components/ui/CardIcon';
 import Section from '../components/ui/Section';
 import CtaBand from '../components/ui/CtaBand';
 import NameEquation from '../components/home/NameEquation';
 import { useLocale } from '../i18n/useLocale';
 import { company } from '../config/site';
 import gadgetsImg from '../assets/images/about-gadgets.webp';
+
+// One icon per "What we do" card, in the order of content.about.whatWeDo.items.
+const whatWeDoIcons = [ShoppingCart, AppWindow, BatteryCharging, RadioTower];
 
 export default function About() {
   const { t } = useLocale();
@@ -59,7 +64,7 @@ export default function About() {
       <Section tone="muted" eyebrow={a.whatWeDo.eyebrow} title={a.whatWeDo.title}>
         <ul className="card-grid card-grid-4">
           {a.whatWeDo.items.map((item, i) => (
-            <li key={item.title} className={`card reveal reveal-delay-${(i % 3) + 1}`}><h3>{item.title}</h3><p>{item.body}</p></li>
+            <li key={item.title} className={`card reveal reveal-delay-${(i % 3) + 1}`}><CardIcon icon={whatWeDoIcons[i]} /><h3>{item.title}</h3><p>{item.body}</p></li>
           ))}
         </ul>
       </Section>

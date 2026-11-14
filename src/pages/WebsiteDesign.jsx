@@ -7,6 +7,7 @@ import Button from '../components/ui/Button';
 import ThemedImage from '../components/ui/ThemedImage';
 import CircleIcon from '../components/ui/CircleIcon';
 import Price from '../components/services/Price';
+import CardIcon from '../components/ui/CardIcon';
 import { useLocale } from '../i18n/useLocale';
 import { carePlan, designPackages, designServices, portfolio } from '../config/site';
 import gizLight from '../assets/services/gizmentor-web-light.webp';
@@ -87,16 +88,13 @@ export default function WebsiteDesign() {
 
       <Section eyebrow={w.included.eyebrow} title={w.included.title}>
         <ul className="card-grid card-grid-3">
-          {w.included.items.map((c, i) => {
-            const Icon = includedIcons[i];
-            return (
-              <li key={c.title} className={`card reveal reveal-delay-${(i % 3) + 1}`}>
-                {Icon && <span className="icon-tile card-icon" aria-hidden="true"><Icon size={20} strokeWidth={1.6} /></span>}
-                <h3>{c.title}</h3>
-                <p>{c.body}</p>
-              </li>
-            );
-          })}
+          {w.included.items.map((c, i) => (
+            <li key={c.title} className={`card reveal reveal-delay-${(i % 3) + 1}`}>
+              <CardIcon icon={includedIcons[i]} />
+              <h3>{c.title}</h3>
+              <p>{c.body}</p>
+            </li>
+          ))}
         </ul>
       </Section>
 
