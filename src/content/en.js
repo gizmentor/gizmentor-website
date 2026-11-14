@@ -739,7 +739,7 @@ const en = {
     },
     cta: {
       title: 'Ready when you are.',
-      body: 'Our project brief takes about five minutes. We reply by email with next steps and an initial quote.',
+      body: 'Our project brief takes about a minute. We reply by email with next steps and an initial quote.',
       primary: 'Start your project',
       secondary: 'Ask a question',
     },
@@ -749,11 +749,12 @@ const en = {
     hero: {
       eyebrow: 'Website design · Project brief',
       title: 'Start your project.',
-      lead: 'Seven short steps, about five minutes. We reply by email with next steps and an initial quote.',
+      lead: 'Three quick steps, about a minute. We reply by email with next steps and an initial quote.',
       word: 'Brief',
     },
     progress: (n, total) => `Step ${n} of ${total}`,
-    steps: ['Project', 'Goals and audience', 'Pages and features', 'Budget', 'Timeline', 'References and brand', 'Contact details'],
+    steps: ['Project', 'Your project', 'Contact details'],
+    more: 'Add more detail (optional): pages, features, links',
     back: 'Back',
     next: 'Continue',
     submit: 'Send brief',
@@ -769,7 +770,7 @@ const en = {
         label: 'What are we building?',
         options: { new: 'A new website', redesign: 'A redesign', landing: 'A landing page', ecommerce: 'An online store', other: 'Something else' },
       },
-      goals: { label: 'What should the website achieve?', hint: 'For example: more enquiries, selling online, credibility with investors.' },
+      goals: { label: 'Tell us briefly what you need', hint: 'A sentence or two is enough. For example: a bilingual site for our clinic that brings in bookings.' },
       audience: { label: 'Who is it for?', hint: 'Your customers, markets and languages.' },
       currentSite: { label: 'Current website', hint: 'If you have one.' },
       pages: {
@@ -804,7 +805,7 @@ const en = {
         options: { asap: 'As soon as possible', '1-2m': 'In 1–2 months', '3m+': 'In 3 months or more', flexible: 'I’m flexible' },
       },
       deadline: { label: 'Is there a fixed date?', hint: 'For example a launch event or a campaign.' },
-      references: { label: 'Websites you like', hint: 'Links, and what you like about each one.' },
+      references: { label: 'Links', hint: 'Your current website, sites you like, or a Drive or Dropbox folder with your logo and photos.' },
       assets: {
         label: 'Do you have brand assets (logo, colours, photos)?',
         options: { ready: 'Yes, ready to share', partial: 'Some of them', none: 'Not yet' },
@@ -882,7 +883,7 @@ const en = {
     },
     '/services/website-design/brief': {
       title: 'Start your website project — Project brief | GizMentor',
-      description: 'Tell us about your website in seven short steps: goals, pages, features, budget and timeline. We reply by email with next steps and an initial quote.',
+      description: 'Tell us about your website in three quick steps: your package, what you need, budget and timeline. We reply by email with next steps and an initial quote.',
     },
     '/terms': { title: 'Terms of Use — GizMentor', description: 'Terms of Use for the GizMentor FZCO website.' },
     '/privacy': { title: 'Privacy Policy — GizMentor', description: 'How GizMentor FZCO collects, uses and protects information.' },
