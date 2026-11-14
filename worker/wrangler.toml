@@ -1,0 +1,19 @@
+# Cloudflare Worker behind the website's forms (Contact and the website-design brief).
+# Deployed by .github/workflows/deploy-forms.yml; setup steps are in worker/README.md.
+name = "gizmentor-forms"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+# Served at https://gizmentor-forms.soft-hill-9932.workers.dev (gizmentor.com's DNS is not on
+# Cloudflare, so there is no custom domain). Visitors never see this address.
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGINS = "https://gizmentor.com,https://www.gizmentor.com"
+# Must be on the domain verified in Resend.
+MAIL_FROM = "GizMentor <forms@send.gizmentor.com>"
+LEADS_TO = "info@gizmentor.com"
+# Partner, merchant and affiliate enquiries (site.js partnersEmail).
+PARTNERS_TO = "partners@easelect.ai"
+
+[observability]
+enabled = true

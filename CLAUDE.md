@@ -27,6 +27,10 @@ Stack: Vite, React 19, react-router-dom 6, prerendered to static HTML at build t
 - `src/config/site.js` - company facts and venture status/URLs; `null` values are hidden by the UI
 - `src/config/seo.js` - OG images, JSON-LD, `routeSettings` (which routes are prerendered and in the sitemap)
 - `src/routes.jsx`, `src/pages/` - routes and page components
+- `src/pages/Services.jsx`, `WebsiteDesign.jsx`, `Brief.jsx` - `/services`, the website-design packages page and
+  its multi-step project brief; packages, prices and Care plan are in `src/config/site.js` (`designPackages`, `carePlan`)
+- `worker/` - Cloudflare Worker (gizmentor-forms, on workers.dev) that emails the Contact form and the project brief
+  through Resend (setup and free-tier limits in `worker/README.md`); both forms post to it via `src/lib/forms.js`
 - `src/components/` - `brand`, `easelect`, `home`, `layout`, `motion`, `ui`
 - `src/i18n/` - locale mapping and `useLocale()` (`t` for copy, `to()` to localise links)
 - `src/styles/index.css` - design tokens (`:root` and `:root[data-theme='dark']`)
@@ -50,6 +54,9 @@ Adding a page: update `src/routes.jsx`, `routeSettings` in `src/config/seo.js`, 
   optional variable `DEPLOY_PATH` (default `/opt/gizmentor-website`). Until they are set, a merge
   skips its deploy with a warning.
 - `npm run build` writes the site to `dist`.
+- `.github/workflows/deploy-forms.yml` deploys `worker/` on merges that change it (production environment secrets
+  `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `RESEND_API_KEY`, `TURNSTILE_SECRET_KEY`; skipped with a
+  warning until the first two are set).
 - `vercel.json` and `DEPLOY.md` are left from earlier setups (DEPLOY.md also describes an SPA and a
   `gizmentor-app` repo). Keep `vercel.json` and `public/_redirects` in sync with each other; trust
   `package.json` for how the site builds.

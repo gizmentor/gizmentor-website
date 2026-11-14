@@ -7,6 +7,9 @@ import Easelect from './pages/Easelect';
 import MagFusion from './pages/MagFusion';
 import Investors from './pages/Investors';
 import Contact from './pages/Contact';
+import Services from './pages/Services';
+import WebsiteDesign from './pages/WebsiteDesign';
+import Brief from './pages/Brief';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import Returns from './pages/Returns';
@@ -26,6 +29,9 @@ function pages(locale) {
       <Route path="products/magfusion" element={<MagFusion />} />
       <Route path="products/magfusion-air" element={<Navigate to={to('/products/magfusion')} replace />} />
       <Route path="investors" element={<Investors />} />
+      <Route path="services" element={<Services />} />
+      <Route path="services/website-design" element={<WebsiteDesign />} />
+      <Route path="services/website-design/brief" element={<Brief />} />
       <Route path="contact" element={<Contact />} />
       <Route path="terms" element={<Terms />} />
       <Route path="privacy" element={<Privacy />} />
