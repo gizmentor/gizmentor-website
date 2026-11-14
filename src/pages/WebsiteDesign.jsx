@@ -1,4 +1,4 @@
-import { ChartLine, Check, Gauge, Languages, ShieldCheck, Smartphone, Sparkles } from 'lucide-react';
+import { Bot, ChartLine, Check, FilePlus, Gauge, Languages, ShieldCheck, Smartphone, Sparkles, Workflow } from 'lucide-react';
 import PageHero from '../components/ui/PageHero';
 import Section from '../components/ui/Section';
 import PillarGrid from '../components/ui/PillarGrid';
@@ -22,6 +22,8 @@ const shots = {
 
 // One icon per "In every build" card, in the order of content.websiteDesign.included.items.
 const includedIcons = [Smartphone, Gauge, Languages, ChartLine, ShieldCheck, Sparkles];
+// One icon per add-on card, in the order of content.websiteDesign.addOns.items.
+const addOnIcons = [Bot, Workflow, FilePlus];
 
 const brief = (pkg) => `${designServices.briefPath}?package=${pkg}`;
 
@@ -56,6 +58,7 @@ export default function WebsiteDesign() {
                   {pkg.recommended && <span className="badge">{p.recommended}</span>}
                 </div>
                 <p className="package-tagline">{c.tagline}</p>
+                <p className="package-best"><span>{p.bestForLabel}</span>{c.bestFor}</p>
                 {pkg.customQuote && <p className="package-quote">{p.customQuote}</p>}
                 <Price aed={pkg.fromAed} />
                 <ul className="check-list">
@@ -63,7 +66,9 @@ export default function WebsiteDesign() {
                     <li key={f}><Check size={16} strokeWidth={2} aria-hidden="true" />{f}</li>
                   ))}
                 </ul>
+                <p className="package-choose"><strong>{p.chooseIfLabel}</strong> {c.chooseIf}</p>
                 <p className="package-timeline"><span>{p.timelineLabel}</span>{c.timeline}</p>
+                {c.notIncluded && <p className="package-excluded">{c.notIncluded}</p>}
                 <Button to={brief(pkg.key)} variant={pkg.recommended ? 'primary' : 'secondary'} className="btn-block">
                   {p.choose(c.name)}
                 </Button>
@@ -73,7 +78,21 @@ export default function WebsiteDesign() {
         </ul>
       </Section>
 
-      <Section id="care" tone="muted" layout="split" eyebrow={w.care.eyebrow} title={w.care.title} lead={w.care.lead}>
+      <Section id="add-ons" tone="muted" eyebrow={w.addOns.eyebrow} title={w.addOns.title} lead={w.addOns.lead}>
+        <ul className="card-grid card-grid-3">
+          {w.addOns.items.map((c, i) => (
+            <li key={c.title} className={`card reveal reveal-delay-${i + 1}`}>
+              <CardIcon icon={addOnIcons[i]} />
+              <h3>{c.title}</h3>
+              <p>{c.body}</p>
+              <p className="addon-price">{w.addOns.priceLabel}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="policy-note addon-note reveal">{w.addOns.aiNote}</p>
+      </Section>
+
+      <Section id="care" layout="split" eyebrow={w.care.eyebrow} title={w.care.title} lead={w.care.lead}>
         <div className="care reveal">
           <Price aed={carePlan.fromAed} suffix={w.care.perMonth} />
           <ul className="check-list">

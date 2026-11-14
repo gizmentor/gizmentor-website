@@ -562,7 +562,7 @@ const en = {
     items: {
       websiteDesign: {
         title: 'Website design and build',
-        body: 'Websites in English, Arabic or both, from a focused landing page to an online store with AI features. Clear packages, two revision rounds and an optional monthly Care plan.',
+        body: 'Websites in English, Arabic or both, from a focused landing page to an online store, with optional AI features. Clear packages, two revision rounds and an optional monthly Care plan.',
         cta: 'Explore website design',
       },
     },
@@ -593,11 +593,16 @@ const en = {
       customQuote: 'Custom quote',
       recommended: 'Recommended',
       timelineLabel: 'Timeline',
+      bestForLabel: 'Best for',
+      chooseIfLabel: 'Choose this if',
       choose: (name) => `Start with ${name}`,
       items: {
         launch: {
           name: 'Launch',
-          tagline: 'A landing page or small site that makes a strong first impression.',
+          tagline: 'Get online fast, with a strong first impression.',
+          bestFor: 'A new business, a consultant or freelancer, a product launch, an event or a campaign.',
+          chooseIf: 'you need a professional presence quickly and one to three pages tell your story.',
+          notIncluded: 'Not included: online store, content editing, blog.',
           features: [
             'One landing page or up to 3 pages',
             'Designed for phone, tablet and desktop',
@@ -610,7 +615,10 @@ const en = {
         },
         business: {
           name: 'Business',
-          tagline: 'A multi-page site your team can update, built to be found.',
+          tagline: 'Your complete company website, built to be found.',
+          bestFor: 'Service companies such as clinics, agencies, real estate, restaurants and consultancies.',
+          chooseIf: 'you have several services to explain, want to be found on Google and want to update the site yourself.',
+          notIncluded: 'Not included: online store and payments.',
           features: [
             'Up to 10 pages',
             'Content management: edit text, pages and posts yourself',
@@ -623,11 +631,14 @@ const en = {
         },
         elite: {
           name: 'Elite',
-          tagline: 'Custom design, an online store and AI features, scoped together.',
+          tagline: 'A custom website or an online store.',
+          bestFor: 'Brands and shops that sell online, and companies that need a fully custom design and connected systems.',
+          chooseIf: 'you sell online, take payments, or need the site connected to your CRM, bookings or other tools.',
+          notIncluded: null,
           features: [
             'Custom design system',
             'Online store with payments',
-            'AI features such as a chat agent or workflow automation',
+            'Advanced SEO, speed and analytics set-up',
             'Integrations with your tools: CRM, email, bookings',
             'English and Arabic as standard',
             '2 revision rounds',
@@ -635,6 +646,18 @@ const en = {
           timeline: 'Agreed in the quote, usually 6–10 weeks',
         },
       },
+    },
+    addOns: {
+      eyebrow: 'Add-ons',
+      title: 'Add AI and more to any package.',
+      lead: 'Available with Launch, Business or Elite, and quoted per project.',
+      priceLabel: 'Quoted per project',
+      items: [
+        { title: 'AI chat agent', body: 'Answers customer questions on your website at any hour, based on your services, prices and policies, and passes enquiries to your team.' },
+        { title: 'Automations', body: 'New leads into your CRM, instant replies, follow-up emails and reports, without copying anything by hand.' },
+        { title: 'Extra pages and languages', body: 'More pages, or languages beyond English and Arabic, as your business grows.' },
+      ],
+      aiNote: 'AI usage is billed by the AI provider, such as Anthropic or OpenAI, to your own account. You pay only for what your customers actually use, and you own the account and the data. We set it up, connect it and keep it running.',
     },
     care: {
       eyebrow: 'Care plan',
@@ -707,6 +730,7 @@ const en = {
         { q: 'How many changes are included?', a: 'Every package includes two revision rounds. A round is one combined list of feedback on what we have delivered, and we apply it in full. Further rounds, new pages or new features are quoted before we start them.' },
         { q: 'What happens after launch?', a: 'Changes come out of your Care plan hours, up to two hours a month, or are quoted separately. Without a Care plan, each change is quoted.' },
         { q: 'Are the prices fixed?', a: 'Package prices are starting points. After your brief we send a fixed quote for the agreed scope, and that is the price unless the scope changes.' },
+        { q: 'Who pays for AI usage?', a: 'You do, directly. AI features run on your own account with the AI provider, which bills you for actual usage. We set it up and maintain it, and you keep full ownership of the account and your data.' },
         { q: 'Do prices include VAT?', a: 'No. Prices exclude VAT where applicable. US dollar amounts are for reference only.' },
         { q: 'How long does a project take?', a: 'Launch typically takes 1–2 weeks and Business 3–4 weeks. Elite timelines are agreed in the quote. Timelines start once we have your content.' },
         { q: 'What do I need to provide?', a: 'Your logo and brand assets if you have them, the text and photos for your pages (we can advise), and access to your domain. You pay for the domain and any paid third-party apps directly.' },
@@ -737,8 +761,9 @@ const en = {
     optional: '(optional)',
     fields: {
       package: {
-        label: 'Which package are you interested in?',
-        options: { launch: 'Launch', business: 'Business', elite: 'Elite', care: 'Care plan for an existing site', unsure: 'Not sure yet' },
+        label: 'Which package fits you?',
+        hint: 'Not sure? Choose "Help me choose" and we will recommend one.',
+        options: { launch: 'Launch', business: 'Business', elite: 'Elite', care: 'Care plan for an existing site', unsure: 'Help me choose' },
       },
       projectType: {
         label: 'What are we building?',
