@@ -650,7 +650,7 @@ strong, b { font-weight: 600; }
 .card-platform .card-media-frame img[width='800'] { object-position: center 35%; }
 .card-media-body { padding: clamp(28px, 3vw, 40px); display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
 .card-media-body .icon-tile { margin-bottom: 8px; }
-.card-icon { color: var(--red); margin-bottom: 10px; }
+.card-icon { display: inline-flex; color: var(--red); margin-bottom: 14px; }
 .card-media-body .status { margin-top: 12px; }
 
 .contact-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(40px, 6vw, 96px); align-items: start; }

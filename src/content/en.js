@@ -258,10 +258,10 @@ const en = {
     screens: {
       caption: 'Screens from the Easelect app',
       home: 'Easelect app home screen asking what you are shopping for, with suggested searches',
-      question: 'Easelect asking a follow-up question about the style of headphones the shopper wants',
-      sources: 'Easelect explaining how it researched a recommendation, with the review sources it read',
-      compare: 'Easelect comparison table of two headphones by price, delivery, rating, battery and noise cancelling',
-      prices: 'Easelect price comparison listing retailers by lowest total price including delivery',
+      question: 'Easelect asking whether the shopper wants over-ear headphones or earbuds, below its comparison of the picks',
+      sources: 'Easelect showing how it researched a recommendation: the review and measurement sources it read',
+      compare: 'Easelect comparison table of headphones by price, delivery, rating, battery life and noise cancelling',
+      prices: 'Easelect comparing prices for one pair of headphones across UAE retailers, with delivery for each shop',
       product: 'Easelect product detail with price, delivery and a button to continue to the retailer',
     },
     problem: {
@@ -719,7 +719,7 @@ const en = {
           name: 'Easelect',
           kind: 'AI shopping research platform',
           body: 'Shoppers describe what they need, answer a few questions and get ranked picks with prices and sources.',
-          imageAlt: 'The Easelect web app showing ranked product picks',
+          imageAlt: 'The Easelect website home page: AI. Built for Shopping.',
         },
       },
     },
