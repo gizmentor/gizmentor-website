@@ -1,16 +1,18 @@
-import { useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Handshake, Mail, MapPin } from 'lucide-react';
 import { useLocale } from '../i18n/useLocale';
 import { company, emailFor, inquiryTypes } from '../config/site';
+import { submitForm } from '../lib/forms';
 import PageHero from '../components/ui/PageHero';
+import Turnstile from '../components/ui/Turnstile';
 
 const validTypes = new Set(inquiryTypes);
 const empty = { name: '', email: '', organisation: '', message: '' };
 const noopSubscribe = () => () => {};
 
 export default function Contact() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const c = t.contact;
   const { address } = t.common;
   const [params] = useSearchParams();
@@ -20,24 +22,40 @@ export default function Contact() {
   // then apply ?type= on the client. Once the visitor picks a type, their choice wins.
   const isClient = useSyncExternalStore(noopSubscribe, () => true, () => false);
   const [form, setForm] = useState({ ...empty, inquiryType: null });
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState('idle'); // idle | sending | sent | error
+  const [error, setError] = useState(null);
+  const [token, setToken] = useState('');
+  const startedAt = useRef(0);
+  useEffect(() => { startedAt.current = Date.now(); }, []);
   const inquiryType = form.inquiryType ?? (isClient ? initialType : 'general');
 
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  // Delivery is unchanged from the previous site: opens the visitor's email client
-  // addressed to company.email, or company.partnersEmail for partner enquiries. Swap this for a form endpoint (e.g. an n8n webhook) when ready.
-  const onSubmit = (e) => {
+  // Sent by the forms Worker (worker/, forms.gizmentor.com) to company.email, or to
+  // company.partnersEmail for partner enquiries. The visitor's email app is never opened.
+  const onSubmit = async (e) => {
     e.preventDefault();
-    const typeLabel = c.types[inquiryType];
-    const l = c.mail;
-    const subject = encodeURIComponent(l.subject(typeLabel, form.name));
-    const body = encodeURIComponent(
-      `${l.name}: ${form.name}\n${l.email}: ${form.email}\n${l.organisation}: ${form.organisation || '—'}\n` +
-        `${l.type}: ${typeLabel}\n${product ? `${l.product}: ${product}\n` : ''}\n${l.message}:\n${form.message}`,
-    );
-    window.location.href = `mailto:${emailFor(inquiryType)}?subject=${subject}&body=${body}`;
-    setSent(true);
+    if (status === 'sending') return;
+    setStatus('sending');
+    setError(null);
+    const website = e.currentTarget.elements.website?.value || '';
+    const res = await submitForm({
+      form: 'contact',
+      locale,
+      ...form,
+      inquiryType,
+      product: product || '',
+      website,
+      startedAt: startedAt.current,
+      turnstileToken: token,
+    });
+    if (res.ok) {
+      setStatus('sent');
+      setForm({ ...empty, inquiryType });
+    } else {
+      setStatus('error');
+      setError(res.error);
+    }
   };
 
   return (
@@ -90,8 +108,23 @@ export default function Contact() {
               <label htmlFor="message">{c.fields.message}</label>
               <textarea id="message" name="message" rows="6" value={form.message} onChange={onChange} required className="form-control" />
             </div>
-            <button type="submit" className="btn btn-primary btn-block">{c.submit}</button>
-            <p className="form-note" role="status">{sent ? c.noteAfter(emailFor(inquiryType)) : c.noteBefore}</p>
+            <div className="hp-field" aria-hidden="true">
+              <label htmlFor="contact-website">Website</label>
+              <input id="contact-website" name="website" tabIndex={-1} autoComplete="off" />
+            </div>
+            <Turnstile onToken={setToken} language={locale} />
+            <button type="submit" className="btn btn-primary btn-block" disabled={status === 'sending'}>
+              {status === 'sending' ? c.sending : c.submit}
+            </button>
+            <p className={`form-note${status === 'error' ? ' form-error' : ''}`} role="status" aria-live="polite">
+              {status === 'sent' && c.sent}
+              {status === 'error' && (
+                error === 'invalid' || error === 'verification' ? c.errors[error] : (
+                  <>{c.errors.other} <a href={`mailto:${emailFor(inquiryType)}`} className="latin">{emailFor(inquiryType)}</a>.</>
+                )
+              )}
+              {(status === 'idle' || status === 'sending') && c.noteBefore}
+            </p>
           </form>
         </div>
       </section>

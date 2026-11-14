@@ -1,4 +1,4 @@
-import { SITE_URL, company, ventures } from './site.js';
+import { SITE_URL, carePlan, company, designPackages, designServices, ventures } from './site.js';
 import { LOCALES, localeFromPath, localizePath, stripLocale } from '../i18n/locales.js';
 
 export const DEFAULT_OG_IMAGE = '/og/gizmentor-og.png';
@@ -11,6 +11,9 @@ const routeSettings = {
   '/easelect': { ogImage: '/og/easelect-og.png' },
   '/products/magfusion': { ogImage: '/og/magfusion-og.png' },
   '/investors': {},
+  '/services': {},
+  '/services/website-design': {},
+  '/services/website-design/brief': {},
   '/contact': {},
   '/terms': {},
   '/privacy': {},
@@ -107,6 +110,42 @@ export function getStructuredData(pathname) {
       operatingSystem: 'Web',
       publisher: { '@id': organization['@id'] },
       description: c.meta[base].description,
+    });
+  }
+  if (base === designServices.path) {
+    const w = c.websiteDesign;
+    const offer = (name, price, unitText) => ({
+      '@type': 'Offer',
+      name,
+      priceSpecification: {
+        '@type': unitText ? 'UnitPriceSpecification' : 'PriceSpecification',
+        minPrice: price,
+        priceCurrency: 'AED',
+        valueAddedTaxIncluded: false,
+        ...(unitText && { unitText }),
+      },
+    });
+    graph.push({
+      '@type': 'Service',
+      name: c.services.items.websiteDesign.title,
+      serviceType: 'Website design',
+      description: c.meta[base].description,
+      url: absolute(localizePath(locale, base)),
+      provider: { '@id': organization['@id'] },
+      areaServed: [{ '@type': 'Country', name: 'United Arab Emirates' }, 'Worldwide'],
+      availableLanguage: ['en', 'ar'],
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: w.packages.title,
+        itemListElement: [
+          ...designPackages.map((p) => offer(w.packages.items[p.key].name, p.fromAed)),
+          offer(w.care.eyebrow, carePlan.fromAed, 'MONTH'),
+        ],
+      },
+    });
+    graph.push({
+      '@type': 'FAQPage',
+      mainEntity: w.faq.items.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
     });
   }
   return { '@context': 'https://schema.org', '@graph': graph };

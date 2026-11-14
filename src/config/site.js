@@ -59,6 +59,7 @@ export const nav = [
   { key: 'ventures', to: '/ventures' },
   { key: 'easelect', to: '/easelect' },
   { key: 'magfusion', to: '/products/magfusion' },
+  { key: 'services', to: '/services' },
   { key: 'investors', to: '/investors' },
 ];
 
@@ -70,3 +71,39 @@ export const partnerInquiryTypes = ['partnership', 'retail'];
 
 export const emailFor = (inquiryType) =>
   partnerInquiryTypes.includes(inquiryType) ? company.partnersEmail : company.email;
+
+/**
+ * Form delivery: both forms post to the Worker in worker/ (forms.gizmentor.com), which emails the team.
+ * The Turnstile site key is public; leave it null until the widget exists (worker/README.md).
+ */
+export const forms = {
+  endpoint: 'https://forms.gizmentor.com',
+  turnstileSiteKey: null,
+};
+
+/**
+ * Website design packages. Prices are public "from" prices in AED, excluding VAT where applicable
+ * (approved by the owner, 2026-11-14). USD is shown next to AED at the dirham's fixed rate.
+ * Labels and descriptions live in content.websiteDesign.packages under the same key.
+ */
+export const AED_PER_USD = 3.6725;
+
+export const designPackages = [
+  { key: 'launch', fromAed: 3900 },
+  { key: 'business', fromAed: 9900, recommended: true },
+  { key: 'elite', fromAed: 25000, customQuote: true },
+];
+
+export const carePlan = { fromAed: 790, hoursPerMonth: 2 };
+
+export const designServices = {
+  revisionRounds: 2,
+  path: '/services/website-design',
+  briefPath: '/services/website-design/brief',
+};
+
+/** In-house work shown as the portfolio. Descriptions live in content.websiteDesign.portfolio. */
+export const portfolio = [
+  { key: 'gizmentor', url: 'https://gizmentor.com', host: 'gizmentor.com' },
+  { key: 'easelect', url: 'https://www.easelect.ai', host: 'easelect.ai' },
+];
