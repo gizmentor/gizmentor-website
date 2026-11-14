@@ -1,4 +1,4 @@
-# Deploys the forms Worker (worker/, served at forms.gizmentor.com) when a merge to main changes it,
+# Deploys the forms Worker (worker/, served at gizmentor-forms.soft-hill-9932.workers.dev) when a merge to main changes it,
 # and copies its secrets from the production environment into Cloudflare. Run again by hand:
 # GitHub app → Actions → Deploy forms → Run workflow. Setup: worker/README.md.
 name: Deploy forms
@@ -82,9 +82,9 @@ jobs:
         if: steps.setup.outputs.ready == 'true'
         run: |
           for i in 1 2 3 4 5 6; do
-            code=$(curl -s -o /dev/null -w '%{http_code}' -X OPTIONS -H 'Origin: https://gizmentor.com' https://forms.gizmentor.com/ || true)
-            [ "$code" = "204" ] && { echo "forms.gizmentor.com answers"; exit 0; }
+            code=$(curl -s -o /dev/null -w '%{http_code}' -X OPTIONS -H 'Origin: https://gizmentor.com' https://gizmentor-forms.soft-hill-9932.workers.dev/ || true)
+            [ "$code" = "204" ] && { echo "The forms Worker answers"; exit 0; }
             sleep 10
           done
-          echo "::error::forms.gizmentor.com did not answer (last status $code)."
+          echo "::error::The forms Worker did not answer (last status $code)."
           exit 1

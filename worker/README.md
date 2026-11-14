@@ -1,4 +1,4 @@
-# Forms Worker (forms.gizmentor.com)
+# Forms Worker (gizmentor-forms)
 
 Receives the website's two forms and emails them, so visitors never need their own email app:
 
@@ -7,30 +7,29 @@ Receives the website's two forms and emails them, so visitors never need their o
 
 Each visitor also gets a short confirmation in their language, once Turnstile has verified them.
 
-Runs on the Cloudflare Workers free plan and sends through Resend's free plan. Code: `src/index.js`;
-settings: `wrangler.toml`; deploy: `.github/workflows/deploy-forms.yml` (on merges that change
-`worker/`, or by hand: Actions → Deploy forms → Run workflow).
+Address: `https://gizmentor-forms.soft-hill-9932.workers.dev` (Cloudflare `workers.dev`). gizmentor.com's DNS
+is not on Cloudflare, so there is no custom domain; visitors never see this address.
 
-## One-time setup
+Code: `src/index.js`; settings: `wrangler.toml`; deploy: `.github/workflows/deploy-forms.yml` (on merges that
+change `worker/`, or by hand: Actions → Deploy forms → Run workflow). It can also be deployed with the
+Cloudflare API (script upload with the same `[vars]` as plain-text bindings, keeping secrets).
 
-1. **Resend:** create an account at resend.com, add the domain `send.gizmentor.com`, and add the DNS
-   records it shows in Cloudflare (gizmentor.com → DNS). Wait until Resend says *Verified*, then create
-   an API key with *Sending access* for that domain.
-2. **Turnstile:** Cloudflare dashboard → Turnstile → Add widget, hostnames `gizmentor.com` and
-   `www.gizmentor.com`, mode *Managed*. The **site key** is public: put it in `src/config/site.js`
-   (`forms.turnstileSiteKey`). The **secret key** is not.
-3. **Cloudflare API token:** Cloudflare → My Profile → API Tokens → Create token → template
-   *Edit Cloudflare Workers*, limited to GizMentor's account and the gizmentor.com zone.
-4. **GitHub:** repo → Settings → Environments → `production` → add secrets
-   `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `RESEND_API_KEY`, `TURNSTILE_SECRET_KEY`.
-5. Run Actions → Deploy forms → Run workflow. It deploys, copies the two secrets into the Worker and
-   checks that forms.gizmentor.com answers.
+## Setup (done November 2026)
 
-Never commit any of these values. Without `TURNSTILE_SECRET_KEY` the Worker still accepts forms (with
-a hidden field and a minimum fill time against bots) but sends no confirmations to visitors.
+- **Turnstile:** widget "gizmentor forms" for `gizmentor.com` and `www.gizmentor.com`. The site key is public
+  and in `src/config/site.js`; the secret is stored only in the Worker as `TURNSTILE_SECRET_KEY`.
+- **Resend:** sending domain `send.gizmentor.com` (eu-west-1). Its DNS records (DKIM TXT
+  `resend._domainkey.send`, MX and SPF TXT on `send.send`, CNAME `rsend.send`) live with gizmentor.com's DNS
+  provider. The Worker's `RESEND_API_KEY` secret is a sending-only key for that domain.
+- **GitHub deploy (optional):** production environment secrets `CLOUDFLARE_API_TOKEN` (template "Edit
+  Cloudflare Workers") and `CLOUDFLARE_ACCOUNT_ID`. Without them the workflow skips with a warning.
+
+Never commit any key. Without `TURNSTILE_SECRET_KEY` the Worker still accepts forms (with a hidden field and a
+minimum fill time against bots) but sends no confirmations to visitors.
 
 ## Limits (free plans, checked November 2026)
 
 - Workers: 100,000 requests a day.
-- Resend: 100 emails a day. Each form sends two (team + confirmation), so about 50 submissions a day.
-  Past that, Resend Pro is a paid plan: ask before upgrading.
+- Resend: 100 emails a day and 3,000 a month, shared with every other sender on the same Resend account
+  (Easelect's sign-in codes). Each form sends two (team + confirmation). Past that, Resend Pro is a paid plan:
+  ask before upgrading.

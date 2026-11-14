@@ -31,7 +31,7 @@ export default function Contact() {
 
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  // Sent by the forms Worker (worker/, forms.gizmentor.com) to company.email, or to
+  // Sent by the forms Worker (worker/) to company.email, or to
   // company.partnersEmail for partner enquiries. The visitor's email app is never opened.
   const onSubmit = async (e) => {
     e.preventDefault();

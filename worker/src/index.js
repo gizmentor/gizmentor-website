@@ -1,11 +1,12 @@
 /**
- * forms.gizmentor.com: receives the website's Contact form and the website-design project brief,
+ * Forms Worker (gizmentor-forms on workers.dev): receives the website's Contact form and the website-design project brief,
  * emails them to the team through Resend, and sends the visitor a short confirmation.
  *
  * Secrets (set in Cloudflare or by .github/workflows/deploy-forms.yml, never in this repo):
  *   RESEND_API_KEY        Resend API key with sending access for the MAIL_FROM domain
  *   TURNSTILE_SECRET_KEY  Cloudflare Turnstile secret. When set, every submission must pass Turnstile.
  * Plain settings are in wrangler.toml [vars].
+ * Error codes in the JSON reply match what src/lib/forms.js shows the visitor.
  *
  * Recipients are fixed here and in wrangler.toml; nothing in a request can choose where mail goes.
  * The visitor's confirmation is only sent after Turnstile passes, so the form cannot be used to

@@ -73,12 +73,12 @@ export const emailFor = (inquiryType) =>
   partnerInquiryTypes.includes(inquiryType) ? company.partnersEmail : company.email;
 
 /**
- * Form delivery: both forms post to the Worker in worker/ (forms.gizmentor.com), which emails the team.
- * The Turnstile site key is public; leave it null until the widget exists (worker/README.md).
+ * Form delivery: both forms post to the Worker in worker/ (gizmentor-forms on workers.dev), which
+ * emails the team. The Turnstile site key is public; the secret lives only in the Worker.
  */
 export const forms = {
-  endpoint: 'https://forms.gizmentor.com',
-  turnstileSiteKey: null,
+  endpoint: 'https://gizmentor-forms.soft-hill-9932.workers.dev',
+  turnstileSiteKey: '0x4AAAAAAGAufdgJ92StZQ_K',
 };
 
 /**

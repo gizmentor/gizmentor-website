@@ -29,7 +29,7 @@ Stack: Vite, React 19, react-router-dom 6, prerendered to static HTML at build t
 - `src/routes.jsx`, `src/pages/` - routes and page components
 - `src/pages/Services.jsx`, `WebsiteDesign.jsx`, `Brief.jsx` - `/services`, the website-design packages page and
   its multi-step project brief; packages, prices and Care plan are in `src/config/site.js` (`designPackages`, `carePlan`)
-- `worker/` - Cloudflare Worker at forms.gizmentor.com that emails the Contact form and the project brief
+- `worker/` - Cloudflare Worker (gizmentor-forms, on workers.dev) that emails the Contact form and the project brief
   through Resend (setup and free-tier limits in `worker/README.md`); both forms post to it via `src/lib/forms.js`
 - `src/components/` - `brand`, `easelect`, `home`, `layout`, `motion`, `ui`
 - `src/i18n/` - locale mapping and `useLocale()` (`t` for copy, `to()` to localise links)

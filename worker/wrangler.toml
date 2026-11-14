@@ -3,10 +3,9 @@
 name = "gizmentor-forms"
 main = "src/index.js"
 compatibility_date = "2026-10-01"
-workers_dev = false
-
-# forms.gizmentor.com: Cloudflare creates the DNS record itself (the zone is on Cloudflare).
-routes = [{ pattern = "forms.gizmentor.com", custom_domain = true }]
+# Served at https://gizmentor-forms.soft-hill-9932.workers.dev (gizmentor.com's DNS is not on
+# Cloudflare, so there is no custom domain). Visitors never see this address.
+workers_dev = true
 
 [vars]
 ALLOWED_ORIGINS = "https://gizmentor.com,https://www.gizmentor.com"
