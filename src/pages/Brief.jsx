@@ -5,7 +5,8 @@ import PageHero from '../components/ui/PageHero';
 import Button from '../components/ui/Button';
 import Turnstile from '../components/ui/Turnstile';
 import { useLocale } from '../i18n/useLocale';
-import { company, designServices, forms } from '../config/site';
+import { company, designPackages, designServices, forms } from '../config/site';
+import { PriceInline } from '../components/services/Price';
 import { submitForm } from '../lib/forms';
 
 // Option values match worker/src/index.js, which rejects anything else.
@@ -59,6 +60,45 @@ function ChoiceGroup({ name, label, hint, options, values, value, onChange, requ
             onChange={onChange}
             required={required}
           />
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
+/** Step 1: the three packages as selectable cards, then the Care plan and "help me choose" as plain tiles. */
+function PackagePicker({ value, onChange, label, hint, options }) {
+  const { t } = useLocale();
+  const p = t.websiteDesign.packages;
+  return (
+    <fieldset className="form-group" aria-describedby="package-hint">
+      <legend className="form-legend">{label}</legend>
+      <p id="package-hint" className="form-hint">{hint}</p>
+      <div className="pick-grid">
+        {designPackages.map((pkg) => {
+          const c = p.items[pkg.key];
+          const checked = value === pkg.key;
+          return (
+            <label key={pkg.key} className={`pick${checked ? ' is-checked' : ''}`}>
+              <input type="radio" name="package" value={pkg.key} checked={checked} onChange={onChange} />
+              <span className="pick-head">
+                <span className="pick-name">{c.name}</span>
+                <span className="choice-box" aria-hidden="true"><Check size={14} strokeWidth={2.4} /></span>
+              </span>
+              <PriceInline aed={pkg.fromAed} />
+              <span className="pick-best">{c.bestFor}</span>
+              <span className="pick-features">
+                {c.features.slice(0, 3).map((f) => (
+                  <span key={f}><Check size={14} strokeWidth={2} aria-hidden="true" />{f}</span>
+                ))}
+              </span>
+            </label>
+          );
+        })}
+      </div>
+      <div className="choice-grid choice-grid-2">
+        {['care', 'unsure'].map((v) => (
+          <Choice key={v} name="package" value={v} label={options[v]} checked={value === v} onChange={onChange} />
         ))}
       </div>
     </fieldset>
@@ -147,7 +187,7 @@ export default function Brief() {
 
   const steps = [
     <>
-      <ChoiceGroup name="package" label={f.package.label} options={f.package.options} values={OPTIONS.package} value={pkg} onChange={onRadio} />
+      <PackagePicker value={pkg} onChange={onRadio} label={f.package.label} hint={f.package.hint} options={f.package.options} />
       <ChoiceGroup name="projectType" label={f.projectType.label} options={f.projectType.options} values={OPTIONS.projectType} value={data.projectType} onChange={onRadio} required />
     </>,
     <>

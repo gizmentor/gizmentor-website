@@ -926,3 +926,32 @@ fieldset.form-group { border: 0; min-width: 0; }
   .header-tools > .tool-pill, .header-tools > .theme-toggle { display: none; }
   .mobile-menu-tools { display: flex; }
 }
+
+/* Website design: package details, add-ons, brief package picker ---------------- */
+.package-best { display: flex; flex-direction: column; gap: 4px; font-size: 0.9375rem; color: var(--text-2); }
+.package-best span, .package-timeline span { font-size: 0.8125rem; color: var(--text-3); }
+.package-choose { font-size: 0.9375rem; color: var(--text-2); }
+.package-choose strong { color: var(--text); font-weight: 500; }
+.package-excluded { font-size: 0.8125rem; color: var(--text-3); margin-top: -8px; }
+.addon-price { margin-top: auto; padding-top: 8px; font-size: 0.875rem; font-weight: 500; color: var(--red) !important; }
+.addon-note { margin-top: 24px; background: var(--panel); }
+.pick-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 10px; }
+.pick {
+  position: relative; display: flex; flex-direction: column; gap: 10px; padding: 18px; cursor: pointer;
+  border: 1px solid var(--line-strong); background: var(--bg); transition: border-color 0.3s;
+}
+.pick:hover { border-color: var(--text); }
+.pick.is-checked { border-color: var(--red); box-shadow: inset 0 0 0 1px var(--red); }
+.pick input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.pick:has(input:focus-visible) { outline: 2px solid var(--red); outline-offset: 2px; }
+.pick-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.pick-name { font-size: 1.25rem; font-weight: 500; letter-spacing: -0.03em; }
+.pick .choice-box { border-radius: 50%; }
+.pick.is-checked .choice-box { background: var(--red); border-color: var(--red); color: #fff; }
+.price-inline { font-size: 0.875rem; color: var(--text-3); }
+.price-inline strong { font-size: 1.125rem; color: var(--text); font-weight: 500; }
+.pick-best { font-size: 0.875rem; color: var(--text-2); }
+.pick-features { display: flex; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 0.8125rem; color: var(--text-2); }
+.pick-features span { display: flex; gap: 6px; align-items: flex-start; }
+.pick-features svg { flex-shrink: 0; margin-top: 0.2em; color: var(--red); }
+@media (max-width: 960px) { .pick-grid { grid-template-columns: minmax(0, 1fr); } }

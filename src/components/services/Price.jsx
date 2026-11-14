@@ -19,3 +19,15 @@ export default function Price({ aed, suffix }) {
     </p>
   );
 }
+
+/** One line: "From AED 3,900" (Arabic: "تبدأ من 3,900 درهم"), for compact places such as the brief's package cards. */
+export function PriceInline({ aed }) {
+  const { t, locale } = useLocale();
+  const p = t.websiteDesign.packages;
+  const amount = <strong className="latin">{formatAmount(aed)}</strong>;
+  return (
+    <span className="price-inline">
+      {p.from} {locale === 'ar' ? <>{amount} {p.currency}</> : <>{p.currency} {amount}</>}
+    </span>
+  );
+}
