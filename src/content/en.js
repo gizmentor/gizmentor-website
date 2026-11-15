@@ -690,7 +690,7 @@ const en = {
       eyebrow: 'How it works',
       title: 'From brief to launch in six steps.',
       steps: [
-        { title: 'Brief', body: 'You tell us your goals, pages, budget and timeline in our project brief.' },
+        { title: 'Brief', body: 'You tell us your goals, pages and timeline in our project brief.' },
         { title: 'Proposal and quote', body: 'We reply with scope, price and dates. Work starts once you approve them.' },
         { title: 'Design', body: 'We design the key pages and share them with you. Revision round one.' },
         { title: 'Build', body: 'We build the full site with your content. Revision round two.' },
@@ -749,21 +749,17 @@ const en = {
     hero: {
       eyebrow: 'Website design · Project brief',
       title: 'Start your project.',
-      lead: 'Three quick steps, about a minute. We reply by email with next steps and an initial quote.',
+      lead: 'One short form, about a minute. We reply by email with next steps and an initial quote.',
       word: 'Brief',
     },
-    progress: (n, total) => `Step ${n} of ${total}`,
-    steps: ['Project', 'Your project', 'Contact details'],
-    more: 'Add more detail (optional): pages, features, links',
-    back: 'Back',
-    next: 'Continue',
+    choose: 'Choose…',
+    from: (aed) => `from AED ${aed.toLocaleString('en-US')}`,
     submit: 'Send brief',
     sending: 'Sending…',
     optional: '(optional)',
     fields: {
       package: {
-        label: 'Which package fits you?',
-        hint: 'Not sure? Choose "Help me choose" and we will recommend one.',
+        label: 'Package',
         options: { launch: 'Launch', business: 'Business', elite: 'Elite', care: 'Care plan for an existing site', unsure: 'Help me choose' },
       },
       projectType: {
@@ -795,11 +791,6 @@ const en = {
         },
       },
       featureNotes: { label: 'Anything else we should know?' },
-      budget: {
-        label: 'What is your budget?',
-        hint: 'Excluding VAT. Our packages start at AED 3,900.',
-        options: { '3900-9900': 'AED 3,900–9,900', '9900-25000': 'AED 9,900–25,000', '25000-50000': 'AED 25,000–50,000', '50000+': 'AED 50,000+', unsure: 'Not sure yet' },
-      },
       timeline: {
         label: 'When would you like to launch?',
         options: { asap: 'As soon as possible', '1-2m': 'In 1–2 months', '3m+': 'In 3 months or more', flexible: 'I’m flexible' },
@@ -883,7 +874,7 @@ const en = {
     },
     '/services/website-design/brief': {
       title: 'Start your website project — Project brief | GizMentor',
-      description: 'Tell us about your website in three quick steps: your package, what you need, budget and timeline. We reply by email with next steps and an initial quote.',
+      description: 'Tell us about your website in one short form: your package, what you need and your timeline. We reply by email with next steps and an initial quote.',
     },
     '/terms': { title: 'Terms of Use — GizMentor', description: 'Terms of Use for the GizMentor FZCO website.' },
     '/privacy': { title: 'Privacy Policy — GizMentor', description: 'How GizMentor FZCO collects, uses and protects information.' },
