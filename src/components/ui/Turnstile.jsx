@@ -37,6 +37,8 @@ export default function Turnstile({ onToken, language }) {
           sitekey: forms.turnstileSiteKey,
           language,
           theme: 'auto',
+          // Hidden unless Cloudflare needs the visitor to click (2026-11-15).
+          appearance: 'interaction-only',
           callback: (token) => cb.current(token),
           'expired-callback': () => cb.current(''),
           'error-callback': () => cb.current(''),
