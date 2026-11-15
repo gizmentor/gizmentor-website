@@ -15,17 +15,14 @@ const OPTIONS = {
   projectType: ['new', 'redesign', 'landing', 'ecommerce', 'other'],
   pages: ['1', '2-5', '6-10', '10+', 'unsure'],
   features: ['bilingual', 'cms', 'blog', 'seo', 'analytics', 'booking', 'ecommerce', 'payments', 'chat', 'automation', 'integrations', 'care'],
-  budget: ['3900-9900', '9900-25000', '25000-50000', '50000+', 'unsure'],
   timeline: ['asap', '1-2m', '3m+', 'flexible'],
   assets: ['ready', 'partial', 'none'],
 };
 
-// A package chosen on the pricing page suggests a budget; the visitor can change it.
-const BUDGET_FOR = { launch: '3900-9900', business: '9900-25000', elite: '25000-50000' };
 
 const empty = {
   package: null, projectType: '', goals: '', audience: '', currentSite: '', pages: '', features: [], featureNotes: '',
-  budget: null, timeline: '', deadline: '', references: '', assets: '', assetsLink: '',
+  timeline: '', deadline: '', references: '', assets: '', assetsLink: '',
   name: '', email: '', company: '', country: '', agreed: false,
 };
 
@@ -137,7 +134,6 @@ export default function Brief() {
   useEffect(() => { startedAt.current = Date.now(); }, []);
 
   const pkg = data.package ?? urlPackage;
-  const budget = data.budget ?? BUDGET_FOR[pkg] ?? '';
   const { features } = data;
   const total = b.steps.length;
   const last = step === total - 1;
@@ -170,7 +166,6 @@ export default function Brief() {
       locale,
       ...data,
       package: pkg,
-      budget,
       features,
       website: e.currentTarget.elements.website?.value || '',
       startedAt: startedAt.current,
@@ -192,7 +187,6 @@ export default function Brief() {
     </>,
     <>
       <Field name="goals" label={f.goals.label} hint={f.goals.hint} multiline rows={3} required maxLength={3000} value={data.goals} onChange={onText} />
-      <ChoiceGroup name="budget" label={f.budget.label} hint={f.budget.hint} options={f.budget.options} values={OPTIONS.budget} value={budget} onChange={onRadio} required />
       <ChoiceGroup name="timeline" label={f.timeline.label} options={f.timeline.options} values={OPTIONS.timeline} value={data.timeline} onChange={onRadio} required />
       <details className="brief-more">
         <summary>{b.more}</summary>

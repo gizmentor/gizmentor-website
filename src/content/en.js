@@ -883,7 +883,7 @@ const en = {
     },
     '/services/website-design/brief': {
       title: 'Start your website project — Project brief | GizMentor',
-      description: 'Tell us about your website in three quick steps: your package, what you need, budget and timeline. We reply by email with next steps and an initial quote.',
+      description: 'Tell us about your website in three quick steps: your package, what you need and your timeline. We reply by email with next steps and an initial quote.',
     },
     '/terms': { title: 'Terms of Use — GizMentor', description: 'Terms of Use for the GizMentor FZCO website.' },
     '/privacy': { title: 'Privacy Policy — GizMentor', description: 'How GizMentor FZCO collects, uses and protects information.' },

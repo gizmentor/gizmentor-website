@@ -84,7 +84,7 @@ function validateBrief(b) {
     pages: b.pages ? oneOf(b.pages, BRIEF.pages) : '',
     features,
     featureNotes: text(b.featureNotes, 2000),
-    budget: oneOf(b.budget, BRIEF.budget),
+    budget: b.budget ? oneOf(b.budget, BRIEF.budget) : '',
     timeline: oneOf(b.timeline, BRIEF.timeline),
     deadline: text(b.deadline, 200),
     references: text(b.references, 2000),
@@ -164,7 +164,7 @@ function briefEmails(d, env) {
     ['Pages', d.pages],
     ['Features', d.features.join(', ')],
     ['Feature notes', d.featureNotes],
-    ['Budget', L.budget[d.budget]],
+    ['Budget', d.budget ? L.budget[d.budget] : ''],
     ['Timeline', L.timeline[d.timeline]],
     ['Deadline', d.deadline],
     ['Links', d.references],
@@ -172,7 +172,7 @@ function briefEmails(d, env) {
     ['Assets link', d.assetsLink],
     ['Revision policy', d.agreed ? 'Accepted (2 revision rounds; later changes from Care hours or quoted)' : ''],
   ]);
-  return { to: env.LEADS_TO, subject: `[Brief] ${L.projectType[d.projectType]} · ${L.budget[d.budget]} · ${d.name}`, text: t, html };
+  return { to: env.LEADS_TO, subject: `[Brief] ${L.projectType[d.projectType]} · ${L.package[d.package]} · ${d.name}`, text: t, html };
 }
 
 /** The visitor's confirmation. Only their name and choices from fixed lists are echoed back. */
@@ -187,7 +187,7 @@ function confirmation(form, d, locale, env) {
           ? 'شكراً لكم، وصلنا موجز مشروعكم. سنراجعه ونرد عليكم عبر البريد الإلكتروني، وغالباً خلال يومَي عمل، بالخطوات التالية وعرض سعر مبدئي.'
           : 'شكراً لتواصلكم مع GizMentor. وصلتنا رسالتكم وسيرد عليكم الشخص المناسب من فريقنا عبر البريد الإلكتروني.',
         ...(form === 'brief'
-          ? [`نوع المشروع: ${L.projectType[d.projectType]}`, `الميزانية: ${L.budget[d.budget]}`, `الجدول الزمني: ${L.timeline[d.timeline]}`]
+          ? [`الباقة: ${L.package[d.package]}`, `نوع المشروع: ${L.projectType[d.projectType]}`, `الجدول الزمني: ${L.timeline[d.timeline]}`]
           : []),
         'إذا أردتم إضافة شيء، يكفي الرد على هذه الرسالة.',
         'فريق GizMentor',
@@ -198,7 +198,7 @@ function confirmation(form, d, locale, env) {
           ? 'Thank you, we have your project brief. We will review it and reply by email, usually within two working days, with next steps and an initial quote.'
           : 'Thank you for contacting GizMentor. We have your message and the right person on our team will reply by email.',
         ...(form === 'brief'
-          ? [`Project type: ${L.projectType[d.projectType]}`, `Budget: ${L.budget[d.budget]}`, `Timeline: ${L.timeline[d.timeline]}`]
+          ? [`Package: ${L.package[d.package]}`, `Project type: ${L.projectType[d.projectType]}`, `Timeline: ${L.timeline[d.timeline]}`]
           : []),
         'To add anything, just reply to this email.',
         'The GizMentor team',
