@@ -679,7 +679,8 @@ select.form-control { appearance: auto; }
 .form-legend { font-size: 0.9375rem; font-weight: 500; margin-bottom: 8px; padding: 0; }
 fieldset.form-group { border: 0; min-width: 0; }
 .hp-field { position: absolute; inset-inline-start: -10000px; width: 1px; height: 1px; overflow: hidden; }
-.turnstile { min-height: 65px; }
+/* Empty while hidden (interaction-only), so no gap; grows if a check is shown. */
+.turnstile:empty { display: none; }
 .btn:disabled { opacity: 0.6; cursor: progress; }
 
 /* Services: packages, prices, Care, FAQ ------------------------------------- */
