@@ -4,10 +4,12 @@ import productImg from '../../assets/easelect/easelect-product.webp';
 import pricesImg from '../../assets/easelect/easelect-prices.webp';
 import compareImg from '../../assets/easelect/easelect-compare.webp';
 import sourcesImg from '../../assets/easelect/easelect-sources.webp';
+import homeLowerImg from '../../assets/easelect/easelect-home-lower-light.webp';
 
 /**
  * Real Easelect app screens from the current app (demo mode, UAE, November 2026), 640px wide.
- * question, sources and compare are cropped to the part the journey shows. Alt text lives in content.easelect.screens.
+ * question, sources and compare are cropped to the part the journey shows. homeLower is the lower part of the
+ * light-theme home screen (from easelect-in-hand-light.webp): the headline, suggestions and the search box. Alt text lives in content.easelect.screens.
  */
 export const screens = {
   home: { src: homeImg, w: 640, h: 1385 },
@@ -16,4 +18,5 @@ export const screens = {
   prices: { src: pricesImg, w: 640, h: 1385 },
   compare: { src: compareImg, w: 640, h: 747 },
   sources: { src: sourcesImg, w: 640, h: 747 },
+  homeLower: { src: homeLowerImg, w: 640, h: 747 },
 };

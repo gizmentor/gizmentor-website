@@ -258,6 +258,7 @@ const en = {
     screens: {
       caption: 'Screens from the Easelect app',
       home: 'Easelect app home screen asking what you are shopping for, with suggested searches',
+      homeLower: 'Easelect app home screen in the light theme: the search box asking what you are shopping for, with suggested searches',
       question: 'Easelect asking whether the shopper wants over-ear headphones or earbuds, below its comparison of the picks',
       sources: 'Easelect showing how it researched a recommendation: the review and measurement sources it read',
       compare: 'Easelect comparison table of headphones by price, delivery, rating, battery life and noise cancelling',
