@@ -8,7 +8,12 @@ Receives the website's two forms and emails them, so visitors never need their o
 Each visitor also gets a short confirmation in their language, once Turnstile has verified them.
 
 Address: `https://gizmentor-forms.soft-hill-9932.workers.dev` (Cloudflare `workers.dev`). gizmentor.com's DNS
-is not on Cloudflare, so there is no custom domain; visitors never see this address.
+is not on Cloudflare (it is at GoDaddy), so there is no custom domain; visitors never see this address.
+
+Where the emails land (checked 2026-11-18): gizmentor.com's MX points to Microsoft 365
+(`gizmentor-com.mail.protection.outlook.com`), so briefs and contact messages arrive in the info@gizmentor.com
+Outlook mailbox. The Google Workspace mailbox of the same name only sends (n8n, Gmail connector) and never
+receives: do not look for leads there, and do not point the MX at Google.
 
 Code: `src/index.js`; settings: `wrangler.toml`; deploy: `.github/workflows/deploy-forms.yml` (on merges that
 change `worker/`, or by hand: Actions → Deploy forms → Run workflow). It can also be deployed with the
