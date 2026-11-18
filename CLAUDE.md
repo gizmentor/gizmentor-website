@@ -33,7 +33,8 @@ Stack: Vite, React 19, react-router-dom 6, prerendered to static HTML at build t
   through Resend (setup and free-tier limits in `worker/README.md`); both forms post to it via `src/lib/forms.js`.
   Its emails (visitor confirmation and team copy, English and Arabic, light and dark) use one branded template,
   `worker/src/email.js`, modelled on Easelect's customer email; logos are `public/email/logo-{light,dark}.png`
-  (made by `scripts/email-logos.cjs`)
+  (made by `scripts/email-logos.cjs`). Leads arrive in the info@gizmentor.com Microsoft 365 (Outlook) mailbox;
+  the Google Workspace mailbox of that name only sends (see `worker/README.md`)
 - `src/components/` - `brand`, `easelect`, `home`, `layout`, `motion`, `ui`
 - `src/i18n/` - locale mapping and `useLocale()` (`t` for copy, `to()` to localise links)
 - `src/styles/index.css` - design tokens (`:root` and `:root[data-theme='dark']`)
