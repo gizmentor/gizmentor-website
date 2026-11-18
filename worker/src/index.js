@@ -13,6 +13,8 @@
  * mail strangers.
  */
 
+import { renderEmail } from './email.js';
+
 const MAX_BODY = 24_000;
 const MIN_FILL_MS = 3_000;
 
@@ -32,12 +34,20 @@ const BRIEF = {
 // Labels for the team's email (English) and the visitor's confirmation (their language).
 const LABELS = {
   en: {
+    inquiry: {
+      investor: 'Investor relations', partnership: 'Strategic / technology partnership', retail: 'Merchant & affiliate partnership',
+      easelect: 'Easelect', magfusion: 'MagFusion: sales & wholesale', support: 'Product support', press: 'Press & media', general: 'General enquiry',
+    },
     package: { launch: 'Launch', business: 'Business', elite: 'Elite', care: 'Care plan', unsure: 'Not sure yet' },
     projectType: { new: 'New website', redesign: 'Redesign', landing: 'Landing page', ecommerce: 'Online store', other: 'Something else' },
     budget: { '3900-9900': 'AED 3,900–9,900', '9900-25000': 'AED 9,900–25,000', '25000-50000': 'AED 25,000–50,000', '50000+': 'AED 50,000+', unsure: 'Not sure yet' },
     timeline: { asap: 'As soon as possible', '1-2m': 'In 1–2 months', '3m+': 'In 3 months or more', flexible: 'Flexible' },
   },
   ar: {
+    inquiry: {
+      investor: 'علاقات المستثمرين', partnership: 'شراكة استراتيجية أو تقنية', retail: 'شراكة التجّار والتسويق بالعمولة',
+      easelect: 'Easelect', magfusion: 'MagFusion: المبيعات والجملة', support: 'دعم المنتجات', press: 'الصحافة والإعلام', general: 'استفسار عام',
+    },
     package: { launch: 'الانطلاق', business: 'الأعمال', elite: 'النخبة', care: 'خطة الرعاية', unsure: 'لم أقرر بعد' },
     projectType: { new: 'موقع جديد', redesign: 'إعادة تصميم', landing: 'صفحة هبوط', ecommerce: 'متجر إلكتروني', other: 'شيء آخر' },
     budget: { '3900-9900': 'من 3,900 إلى 9,900 درهم', '9900-25000': 'من 9,900 إلى 25,000 درهم', '25000-50000': 'من 25,000 إلى 50,000 درهم', '50000+': 'أكثر من 50,000 درهم', unsure: 'لم أقرر بعد' },
@@ -48,7 +58,6 @@ const LABELS = {
 const json = (body, status, cors) =>
   new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json', ...cors } });
 
-const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const EMAIL = /^[^\s@<>"]{1,64}@[^\s@<>"]{1,190}\.[a-z]{2,24}$/i;
 
 /** Trimmed string: '' when missing, null when longer than `max` (which fails validation). */
@@ -123,99 +132,178 @@ async function send(env, message) {
   return res.ok;
 }
 
-/** Plain text and HTML for the team: one "Label: value" row per filled field. */
-function teamEmail(title, rows) {
+/** The team's copy: every filled field as a summary row, a button to reply, and the same rows as plain text. */
+function teamEmail({ eyebrow, title, intro, rows, replyTo, name }) {
   const filled = rows.filter(([, v]) => v);
-  const textBody = `${title}\n\n${filled.map(([k, v]) => `${k}:\n${v}\n`).join('\n')}`;
-  const html =
-    `<div style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.5;color:#394854">` +
-    `<h2 style="font-size:18px;margin:0 0 16px">${esc(title)}</h2>` +
-    filled
-      .map(([k, v]) => `<p style="margin:0 0 14px"><strong>${esc(k)}</strong><br>${esc(v).replace(/\n/g, '<br>')}</p>`)
-      .join('') +
-    `</div>`;
-  return { text: textBody, html };
+  const text = `${title}\n\n${filled.map(([k, v]) => `${k}:\n${v}\n`).join('\n')}`;
+  const html = renderEmail({
+    lang: 'en',
+    title,
+    preheader: intro,
+    eyebrow,
+    heading: title,
+    paragraphs: [intro],
+    summaryTitle: 'Details',
+    summary: filled,
+    cta: { label: `Reply to ${name}`, url: `mailto:${replyTo}` },
+    note: 'Replying to this email also goes to them.',
+    why: 'Sent by the form on gizmentor.com.',
+  });
+  return { text, html };
 }
 
 function contactEmails(d, env) {
   const to = PARTNER_TYPES.includes(d.inquiryType) ? env.PARTNERS_TO : env.LEADS_TO;
-  const { text: t, html } = teamEmail(`Website enquiry: ${d.inquiryType}`, [
-    ['Name', d.name],
-    ['Email', d.email],
-    ['Organisation', d.organisation],
-    ['Enquiry type', d.inquiryType],
-    ['Product', d.product],
-    ['Message', d.message],
-  ]);
-  return { to, subject: `[Contact] ${d.inquiryType} enquiry from ${d.name}`, text: t, html };
+  const type = LABELS.en.inquiry[d.inquiryType];
+  const { text: t, html } = teamEmail({
+    eyebrow: 'Website enquiry',
+    title: `${type} from ${d.name}`,
+    intro: `${d.name} sent an enquiry through the contact form.`,
+    replyTo: d.email,
+    name: d.name,
+    rows: [
+      ['Name', d.name],
+      ['Email', d.email],
+      ['Organisation', d.organisation],
+      ['Enquiry type', type],
+      ['Product', d.product],
+      ['Message', d.message],
+    ],
+  });
+  return { to, subject: `[Contact] ${type} enquiry from ${d.name}`, text: t, html };
 }
 
 function briefEmails(d, env) {
   const L = LABELS.en;
-  const { text: t, html } = teamEmail('New website project brief', [
-    ['Name', d.name],
-    ['Email', d.email],
-    ['Company', d.company],
-    ['Country', d.country],
-    ['Package', L.package[d.package]],
-    ['Project type', L.projectType[d.projectType]],
-    ['Goals', d.goals],
-    ['Audience', d.audience],
-    ['Current website', d.currentSite],
-    ['Pages', d.pages],
-    ['Features', d.features.join(', ')],
-    ['Feature notes', d.featureNotes],
-    ['Timeline', L.timeline[d.timeline]],
-    ['Deadline', d.deadline],
-    ['Links', d.references],
-    ['Brand assets', d.assets],
-    ['Assets link', d.assetsLink],
-    ['Revision policy', d.agreed ? 'Accepted (2 revision rounds; later changes from Care hours or quoted)' : ''],
-  ]);
+  const { text: t, html } = teamEmail({
+    eyebrow: 'Website design · New project brief',
+    title: `New brief from ${d.name}`,
+    intro: `${d.name} sent a project brief. Reply within two working days with next steps and an initial quote.`,
+    replyTo: d.email,
+    name: d.name,
+    rows: [
+      ['Name', d.name],
+      ['Email', d.email],
+      ['Company', d.company],
+      ['Country', d.country],
+      ['Package', L.package[d.package]],
+      ['Project type', L.projectType[d.projectType]],
+      ['Timeline', L.timeline[d.timeline]],
+      ['What they need', d.goals],
+      ['Audience', d.audience],
+      ['Current website', d.currentSite],
+      ['Pages', d.pages],
+      ['Features', d.features.join(', ')],
+      ['Feature notes', d.featureNotes],
+      ['Deadline', d.deadline],
+      ['Links', d.references],
+      ['Brand assets', d.assets],
+      ['Assets link', d.assetsLink],
+      ['Revision policy', d.agreed ? 'Accepted (2 revision rounds; later changes from Care hours or quoted)' : ''],
+    ],
+  });
   return { to: env.LEADS_TO, subject: `[Brief] ${L.projectType[d.projectType]} · ${L.package[d.package]} · ${d.name}`, text: t, html };
 }
 
+// The visitor's confirmation copy, by language. Steps follow the website-design process on the site.
+const CONFIRM = {
+  en: {
+    brief: {
+      subject: 'We received your project brief — GizMentor',
+      eyebrow: 'Website design · Project brief',
+      heading: (n) => `Thank you, ${n}. Your brief is with us.`,
+      body: 'We will review it and reply by email, usually within two working days, with next steps and an initial quote.',
+      summaryTitle: 'Your brief',
+      stepsTitle: 'What happens next',
+      steps: [
+        ['We review your brief', 'We look at what you need and which package fits.'],
+        ['Proposal and quote', 'We reply with scope, price and dates. Work starts once you approve them.'],
+        ['Design, build and launch', 'Two revision rounds are included, then we test and go live.'],
+      ],
+      cta: 'See our packages',
+      ctaPath: '/services/website-design',
+      why: 'You are receiving this because you sent a project brief on gizmentor.com.',
+    },
+    contact: {
+      subject: 'We received your message — GizMentor',
+      eyebrow: 'GizMentor · Contact',
+      heading: (n) => `Thank you, ${n}. We have your message.`,
+      body: 'The right person on our team will reply by email.',
+      summaryTitle: 'Your enquiry',
+      cta: 'Visit gizmentor.com',
+      ctaPath: '/',
+      why: 'You are receiving this because you contacted us on gizmentor.com.',
+    },
+    labels: { package: 'Package', projectType: 'Project type', timeline: 'Timeline', inquiry: 'Enquiry type' },
+    signoff: 'The GizMentor team',
+    note: 'To add anything, just reply to this email.',
+  },
+  ar: {
+    brief: {
+      subject: 'وصلنا موجز مشروعكم — GizMentor',
+      eyebrow: 'تصميم المواقع · موجز المشروع',
+      heading: (n) => `شكراً لكم، ${n}. وصلنا موجز مشروعكم.`,
+      body: 'سنراجعه ونرد عليكم عبر البريد الإلكتروني، وغالباً خلال يومَي عمل، بالخطوات التالية وعرض سعر مبدئي.',
+      summaryTitle: 'موجزكم',
+      stepsTitle: 'ماذا يحدث بعد ذلك',
+      steps: [
+        ['نراجع موجزكم', 'ندرس ما تحتاجون إليه والباقة الأنسب لكم.'],
+        ['العرض والسعر', 'نرد بالنطاق والسعر والمواعيد، ويبدأ العمل بعد موافقتكم.'],
+        ['التصميم والتطوير والإطلاق', 'تشمل الباقة جولتَي تعديل، ثم نختبر الموقع ونطلقه.'],
+      ],
+      cta: 'تعرّفوا على باقاتنا',
+      ctaPath: '/services/website-design',
+      why: 'تصلكم هذه الرسالة لأنكم أرسلتم موجز مشروع عبر gizmentor.com.',
+    },
+    contact: {
+      subject: 'وصلتنا رسالتكم — GizMentor',
+      eyebrow: 'GizMentor · تواصل معنا',
+      heading: (n) => `شكراً لكم، ${n}. وصلتنا رسالتكم.`,
+      body: 'سيرد عليكم الشخص المناسب من فريقنا عبر البريد الإلكتروني.',
+      summaryTitle: 'استفساركم',
+      cta: 'زوروا gizmentor.com',
+      ctaPath: '/',
+      why: 'تصلكم هذه الرسالة لأنكم تواصلتم معنا عبر gizmentor.com.',
+    },
+    labels: { package: 'الباقة', projectType: 'نوع المشروع', timeline: 'الجدول الزمني', inquiry: 'نوع الاستفسار' },
+    signoff: 'فريق GizMentor',
+    note: 'إذا أردتم إضافة شيء، يكفي الرد على هذه الرسالة.',
+  },
+};
+
 /** The visitor's confirmation. Only their name and choices from fixed lists are echoed back. */
 function confirmation(form, d, locale, env) {
-  const ar = locale === 'ar';
-  const L = LABELS[ar ? 'ar' : 'en'];
+  const lang = locale === 'ar' ? 'ar' : 'en';
+  const L = LABELS[lang];
+  const c = CONFIRM[lang];
+  const k = c[form === 'brief' ? 'brief' : 'contact'];
   const name = d.name.slice(0, 60);
-  const lines = ar
-    ? [
-        `مرحباً ${name}،`,
-        form === 'brief'
-          ? 'شكراً لكم، وصلنا موجز مشروعكم. سنراجعه ونرد عليكم عبر البريد الإلكتروني، وغالباً خلال يومَي عمل، بالخطوات التالية وعرض سعر مبدئي.'
-          : 'شكراً لتواصلكم مع GizMentor. وصلتنا رسالتكم وسيرد عليكم الشخص المناسب من فريقنا عبر البريد الإلكتروني.',
-        ...(form === 'brief'
-          ? [`نوع المشروع: ${L.projectType[d.projectType]}`, `الجدول الزمني: ${L.timeline[d.timeline]}`]
-          : []),
-        'إذا أردتم إضافة شيء، يكفي الرد على هذه الرسالة.',
-        'فريق GizMentor',
-      ]
-    : [
-        `Hello ${name},`,
-        form === 'brief'
-          ? 'Thank you, we have your project brief. We will review it and reply by email, usually within two working days, with next steps and an initial quote.'
-          : 'Thank you for contacting GizMentor. We have your message and the right person on our team will reply by email.',
-        ...(form === 'brief'
-          ? [`Project type: ${L.projectType[d.projectType]}`, `Timeline: ${L.timeline[d.timeline]}`]
-          : []),
-        'To add anything, just reply to this email.',
-        'The GizMentor team',
-      ];
-  const dir = ar ? 'rtl' : 'ltr';
+  const summary = form === 'brief'
+    ? [[c.labels.package, L.package[d.package]], [c.labels.projectType, L.projectType[d.projectType]], [c.labels.timeline, L.timeline[d.timeline]]]
+    : [[c.labels.inquiry, L.inquiry[d.inquiryType]]];
+  const site = lang === 'ar' ? 'https://gizmentor.com/ar' : 'https://gizmentor.com';
+  const heading = k.heading(name);
   return {
     to: d.email,
     reply_to: form === 'contact' && PARTNER_TYPES.includes(d.inquiryType) ? env.PARTNERS_TO : env.LEADS_TO,
-    subject: ar
-      ? form === 'brief' ? 'وصلنا موجز مشروعكم — GizMentor' : 'وصلتنا رسالتكم — GizMentor'
-      : form === 'brief' ? 'We received your project brief — GizMentor' : 'We received your message — GizMentor',
-    text: lines.join('\n\n'),
-    html:
-      `<div dir="${dir}" style="font-family:system-ui,Tahoma,sans-serif;font-size:15px;line-height:1.6;color:#394854;max-width:560px">` +
-      lines.map((l) => `<p style="margin:0 0 14px">${esc(l)}</p>`).join('') +
-      `<p style="margin:24px 0 0;font-size:13px;color:#8b959d">GizMentor FZCO · <a href="https://gizmentor.com" style="color:#8b959d">gizmentor.com</a></p>` +
-      `</div>`,
+    subject: k.subject,
+    text: [heading, k.body, ...summary.map(([a, b]) => `${a}: ${b}`), c.note, c.signoff].join('\n\n'),
+    html: renderEmail({
+      lang,
+      title: k.subject,
+      preheader: k.body,
+      eyebrow: k.eyebrow,
+      heading,
+      paragraphs: [k.body],
+      summaryTitle: k.summaryTitle,
+      summary,
+      stepsTitle: k.stepsTitle,
+      steps: k.steps,
+      cta: { label: k.cta, url: `${site}${k.ctaPath === '/' ? '' : k.ctaPath}` },
+      signoff: c.signoff,
+      note: c.note,
+      why: k.why,
+    }),
   };
 }
 

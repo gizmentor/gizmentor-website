@@ -28,9 +28,12 @@ Stack: Vite, React 19, react-router-dom 6, prerendered to static HTML at build t
 - `src/config/seo.js` - OG images, JSON-LD, `routeSettings` (which routes are prerendered and in the sitemap)
 - `src/routes.jsx`, `src/pages/` - routes and page components
 - `src/pages/Services.jsx`, `WebsiteDesign.jsx`, `Brief.jsx` - `/services`, the website-design packages page and
-  its multi-step project brief; packages, prices and Care plan are in `src/config/site.js` (`designPackages`, `carePlan`)
+  its one-page project brief; packages, prices and Care plan are in `src/config/site.js` (`designPackages`, `carePlan`)
 - `worker/` - Cloudflare Worker (gizmentor-forms, on workers.dev) that emails the Contact form and the project brief
-  through Resend (setup and free-tier limits in `worker/README.md`); both forms post to it via `src/lib/forms.js`
+  through Resend (setup and free-tier limits in `worker/README.md`); both forms post to it via `src/lib/forms.js`.
+  Its emails (visitor confirmation and team copy, English and Arabic, light and dark) use one branded template,
+  `worker/src/email.js`, modelled on Easelect's customer email; logos are `public/email/logo-{light,dark}.png`
+  (made by `scripts/email-logos.cjs`)
 - `src/components/` - `brand`, `easelect`, `home`, `layout`, `motion`, `ui`
 - `src/i18n/` - locale mapping and `useLocale()` (`t` for copy, `to()` to localise links)
 - `src/styles/index.css` - design tokens (`:root` and `:root[data-theme='dark']`)
